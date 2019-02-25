@@ -1,20 +1,15 @@
-package entities;
+package models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Author {
+public class CustomListType {
     private int id;
     private String name;
-    private LocalDate birthDate;
-    private LocalDate deathDate;
-    private String description;
 }

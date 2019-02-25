@@ -7,6 +7,7 @@ import com.zaxxer.hikari.pool.HikariPool;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -19,7 +20,6 @@ public abstract class AbstractDAO<E, PK extends Serializable> {
     private static final String PASSWORD = "root";
     private static final String JDBC_URL;
 
-    private Connection connection;
     private HikariPool connectionPool;
 
     static {
@@ -48,25 +48,17 @@ public abstract class AbstractDAO<E, PK extends Serializable> {
         return connectionPool.getConnection();
     }
 
-    public PreparedStatement getPrepareStatement(String sql) {
-        PreparedStatement ps = null;
-        try {
-            ps = connection.prepareStatement(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public ResultSet getPreparedStatementResult(Connection connection, String sql, Object... params) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(sql);
+        for (int i = 0; i < params.length; i++) {
+            statement.setObject(i + 1, params[i]);
         }
-        return ps;
+        return statement.executeQuery();
     }
 
-    public void closePrepareStatement(PreparedStatement ps) {
-        if (ps != null) {
-            try {
-                ps.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    public abstract List<E> runQuery(String sql);
+
+    public abstract List<E> runQueryWithParams(String sql, Object... params);
 
     public abstract E getById(PK id);
 

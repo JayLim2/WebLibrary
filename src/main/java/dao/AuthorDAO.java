@@ -1,6 +1,6 @@
 package dao;
 
-import entities.Author;
+import models.Author;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,9 +11,8 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
     @Override
     public Author getById(Integer id) {
         try (Connection connection = getConnection()) {
-            PreparedStatement statement =
-                    connection
-                            .prepareStatement("SELECT * FROM authors WHERE author_id = ?");
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT * FROM authors WHERE author_id = ?");
             statement.setInt(1, id);
             ResultSet set = statement.executeQuery();
             if (set.next()) {
@@ -27,11 +26,33 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
 
     @Override
     public List<Author> getAll() {
+        return runQuery("SELECT * FROM authors");
+    }
+
+    @Override
+    public List<Author> runQuery(String sql) {
         List<Author> authors = new ArrayList<>(20);
         try (Connection connection = getConnection()) {
             ResultSet set = connection
                     .createStatement()
-                    .executeQuery("SELECT * FROM authors");
+                    .executeQuery(sql);
+            while (set.next()) {
+                Author author = mapResultSetToEntity(set);
+                if (author != null) {
+                    authors.add(author);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return authors;
+    }
+
+    @Override
+    public List<Author> runQueryWithParams(String sql, Object... params) {
+        List<Author> authors = new ArrayList<>(20);
+        try (Connection connection = getConnection()) {
+            ResultSet set = getPreparedStatementResult(connection, sql, params);
             while (set.next()) {
                 Author author = mapResultSetToEntity(set);
                 if (author != null) {
@@ -64,8 +85,7 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection
-                            .prepareStatement("UPDATE authors SET name = ?, birth_date = ?, death_date = ?, description = ? WHERE author_id = ?");
+                    connection.prepareStatement("UPDATE authors SET name = ?, birth_date = ?, death_date = ?, description = ? WHERE author_id = ?");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -79,8 +99,7 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection
-                            .prepareStatement("DELETE FROM authors WHERE author_id = ?");
+                    connection.prepareStatement("DELETE FROM authors WHERE author_id = ?");
             statement.setInt(1, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {

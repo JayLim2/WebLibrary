@@ -1,12 +1,23 @@
 import dao.AuthorDAO;
-import entities.Author;
+import models.Author;
+import services.AuthorsService;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 
 public class WebLibraryApplication {
     public static void main(String[] args) {
-        initialize();
+        //initialize();
+
+        AuthorsService authorsService = new AuthorsService();
+
+        List<Author> authors = authorsService.getByBirthDateBetween(
+                LocalDate.of(1921, 1, 1),
+                LocalDate.of(1943, 1, 1)
+        );
+        authors = authorsService.getByDescription("som");
+        authors.forEach(System.out::println);
     }
 
     public static void initialize() {

@@ -1,6 +1,6 @@
 package dao;
 
-import models.Publisher;
+import models.Genre;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,13 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
-
+public class GenreDAO extends AbstractDAO<Genre, Integer> {
     @Override
-    public Publisher getById(Integer id) {
+    public Genre getById(Integer id) {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection
-                    .prepareStatement("SELECT * FROM publishers WHERE publisher_id = ?");
+                    .prepareStatement("SELECT * FROM genres WHERE genre_id = ?");
             statement.setInt(1, id);
             ResultSet set = statement.executeQuery();
             if (set.next()) {
@@ -27,16 +26,16 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    public List<Publisher> getAll() {
-        return runQuery("SELECT * FROM publishers");
+    public List<Genre> getAll() {
+        return runQuery("SELECT * FROM genres");
     }
 
     @Override
-    public boolean save(Publisher entity) {
+    public boolean save(Genre entity) {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("INSERT INTO publishers(title) VALUES (?)");
+                    connection.prepareStatement("INSERT INTO genres(genre_name) VALUES (?)");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -46,11 +45,11 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    public boolean update(Publisher entity) {
+    public boolean update(Genre entity) {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("UPDATE publishers SET title = ? WHERE publisher_id = ?");
+                    connection.prepareStatement("UPDATE genres SET genre_name = ? WHERE genre_id = ?");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -60,11 +59,11 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    public boolean delete(Publisher entity) {
+    public boolean delete(Genre entity) {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("DELETE FROM publishers WHERE publisher_id = ?");
+                    connection.prepareStatement("DELETE FROM genres WHERE genre_id = ?");
             statement.setInt(1, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -74,16 +73,16 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    protected void mapEntityToStatement(Publisher entity, PreparedStatement statement) throws SQLException {
-        statement.setString(1, entity.getTitle());
+    protected void mapEntityToStatement(Genre entity, PreparedStatement statement) throws SQLException {
+        statement.setString(1, entity.getName());
     }
 
     @Override
-    protected Publisher mapResultSetToEntity(ResultSet set) {
+    protected Genre mapResultSetToEntity(ResultSet set) {
         try {
-            Publisher publisher = new Publisher();
-            publisher.setTitle(set.getString("title"));
-            return publisher;
+            Genre genre = new Genre();
+            genre.setName(set.getString("genre_name"));
+            return genre;
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,6 @@
 package dao;
 
-import models.Publisher;
+import models.CustomListType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,13 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
+public class CustomListTypeDAO extends AbstractDAO<CustomListType, Integer> {
 
     @Override
-    public Publisher getById(Integer id) {
+    public CustomListType getById(Integer id) {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection
-                    .prepareStatement("SELECT * FROM publishers WHERE publisher_id = ?");
+                    .prepareStatement("SELECT * FROM custom_list_types WHERE custom_list_type_id = ?");
             statement.setInt(1, id);
             ResultSet set = statement.executeQuery();
             if (set.next()) {
@@ -27,16 +27,16 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    public List<Publisher> getAll() {
-        return runQuery("SELECT * FROM publishers");
+    public List<CustomListType> getAll() {
+        return runQuery("SELECT * FROM custom_list_types");
     }
 
     @Override
-    public boolean save(Publisher entity) {
+    public boolean save(CustomListType entity) {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("INSERT INTO publishers(title) VALUES (?)");
+                    connection.prepareStatement("INSERT INTO custom_list_types(type_name) VALUES (?)");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -46,11 +46,11 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    public boolean update(Publisher entity) {
+    public boolean update(CustomListType entity) {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("UPDATE publishers SET title = ? WHERE publisher_id = ?");
+                    connection.prepareStatement("UPDATE custom_list_types SET type_name = ? WHERE custom_list_type_id = ?");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -60,11 +60,11 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    public boolean delete(Publisher entity) {
+    public boolean delete(CustomListType entity) {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("DELETE FROM publishers WHERE publisher_id = ?");
+                    connection.prepareStatement("DELETE FROM custom_list_types WHERE custom_list_type_id = ?");
             statement.setInt(1, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -74,19 +74,15 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    protected void mapEntityToStatement(Publisher entity, PreparedStatement statement) throws SQLException {
-        statement.setString(1, entity.getTitle());
+    protected void mapEntityToStatement(CustomListType entity, PreparedStatement statement) throws SQLException {
+        statement.setString(1, entity.getName());
     }
 
     @Override
-    protected Publisher mapResultSetToEntity(ResultSet set) {
-        try {
-            Publisher publisher = new Publisher();
-            publisher.setTitle(set.getString("title"));
-            return publisher;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    protected CustomListType mapResultSetToEntity(ResultSet set) throws SQLException {
+        return new CustomListType(
+                0,
+                set.getString("type_name")
+        );
     }
 }

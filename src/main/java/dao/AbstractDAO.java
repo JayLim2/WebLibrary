@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractDAO<E, PK extends Serializable> {
@@ -56,9 +57,39 @@ public abstract class AbstractDAO<E, PK extends Serializable> {
         return statement.executeQuery();
     }
 
-    public abstract List<E> runQuery(String sql);
+    public List<E> runQuery(String sql) {
+        List<E> list = new ArrayList<>(20);
+        try (Connection connection = getConnection()) {
+            ResultSet set = connection
+                    .createStatement()
+                    .executeQuery(sql);
+            while (set.next()) {
+                E entity = mapResultSetToEntity(set);
+                if (entity != null) {
+                    list.add(entity);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
-    public abstract List<E> runQueryWithParams(String sql, Object... params);
+    public List<E> runQueryWithParams(String sql, Object... params) {
+        List<E> list = new ArrayList<>(20);
+        try (Connection connection = getConnection()) {
+            ResultSet set = getPreparedStatementResult(connection, sql, params);
+            while (set.next()) {
+                E entity = mapResultSetToEntity(set);
+                if (entity != null) {
+                    list.add(entity);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     public abstract E getById(PK id);
 
@@ -69,4 +100,8 @@ public abstract class AbstractDAO<E, PK extends Serializable> {
     public abstract boolean update(E entity);
 
     public abstract boolean delete(E entity);
+
+    protected abstract void mapEntityToStatement(E entity, PreparedStatement statement) throws SQLException;
+
+    protected abstract E mapResultSetToEntity(ResultSet set) throws SQLException;
 }

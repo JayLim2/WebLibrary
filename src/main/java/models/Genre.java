@@ -11,5 +11,5 @@ import lombok.Setter;
 @Setter
 public class Genre {
     private int id;
-    private String title;
+    private String name;
 }

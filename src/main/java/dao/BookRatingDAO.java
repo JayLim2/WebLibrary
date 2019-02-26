@@ -1,6 +1,6 @@
 package dao;
 
-import models.Publisher;
+import models.BookRating;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,13 +8,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
+public class BookRatingDAO extends AbstractDAO<BookRating, Integer> {
+
+    private BookDAO bookDAO;
+    private UserDAO userDAO;
+
+    public BookRatingDAO() {
+        this.bookDAO = new BookDAO();
+        this.userDAO = new UserDAO();
+    }
 
     @Override
-    public Publisher getById(Integer id) {
+    public BookRating getById(Integer id) {
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection
-                    .prepareStatement("SELECT * FROM publishers WHERE publisher_id = ?");
+                    .prepareStatement("SELECT * FROM book_ratings WHERE rating_id = ?");
             statement.setInt(1, id);
             ResultSet set = statement.executeQuery();
             if (set.next()) {
@@ -27,16 +35,16 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    public List<Publisher> getAll() {
-        return runQuery("SELECT * FROM publishers");
+    public List<BookRating> getAll() {
+        return runQuery("SELECT * FROM book_ratings");
     }
 
     @Override
-    public boolean save(Publisher entity) {
+    public boolean save(BookRating entity) {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("INSERT INTO publishers(title) VALUES (?)");
+                    connection.prepareStatement("INSERT INTO book_ratings(value, book_id, user_id) VALUES (?, ?, ?)");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -46,11 +54,11 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    public boolean update(Publisher entity) {
+    public boolean update(BookRating entity) {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("UPDATE publishers SET title = ? WHERE publisher_id = ?");
+                    connection.prepareStatement("UPDATE book_ratings SET value = ?, book_id = ?, user_id = ? WHERE rating_id = ?");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -60,11 +68,11 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    public boolean delete(Publisher entity) {
+    public boolean delete(BookRating entity) {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("DELETE FROM publishers WHERE publisher_id = ?");
+                    connection.prepareStatement("DELETE FROM book_ratings WHERE rating_id = ?");
             statement.setInt(1, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -74,19 +82,27 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     }
 
     @Override
-    protected void mapEntityToStatement(Publisher entity, PreparedStatement statement) throws SQLException {
-        statement.setString(1, entity.getTitle());
+    protected void mapEntityToStatement(BookRating entity, PreparedStatement statement) throws SQLException {
+        statement.setInt(1, entity.getValue());
+        statement.setInt(2, entity.getBook().getId());
+        statement.setInt(3, entity.getUser().getId());
     }
 
     @Override
-    protected Publisher mapResultSetToEntity(ResultSet set) {
-        try {
-            Publisher publisher = new Publisher();
-            publisher.setTitle(set.getString("title"));
-            return publisher;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    protected BookRating mapResultSetToEntity(ResultSet set) throws SQLException {
+        return new BookRating(
+                0,
+                set.getInt("value"),
+                bookDAO.getById(set.getInt("book_id")),
+                userDAO.getById(set.getInt("user_id"))
+        );
+    }
+
+    public BookDAO getBookDAO() {
+        return bookDAO;
+    }
+
+    public UserDAO getUserDAO() {
+        return userDAO;
     }
 }

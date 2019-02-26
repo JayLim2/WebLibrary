@@ -4,7 +4,6 @@ import models.Author;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AuthorDAO extends AbstractDAO<Author, Integer> {
@@ -27,42 +26,6 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
     @Override
     public List<Author> getAll() {
         return runQuery("SELECT * FROM authors");
-    }
-
-    @Override
-    public List<Author> runQuery(String sql) {
-        List<Author> authors = new ArrayList<>(20);
-        try (Connection connection = getConnection()) {
-            ResultSet set = connection
-                    .createStatement()
-                    .executeQuery(sql);
-            while (set.next()) {
-                Author author = mapResultSetToEntity(set);
-                if (author != null) {
-                    authors.add(author);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return authors;
-    }
-
-    @Override
-    public List<Author> runQueryWithParams(String sql, Object... params) {
-        List<Author> authors = new ArrayList<>(20);
-        try (Connection connection = getConnection()) {
-            ResultSet set = getPreparedStatementResult(connection, sql, params);
-            while (set.next()) {
-                Author author = mapResultSetToEntity(set);
-                if (author != null) {
-                    authors.add(author);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return authors;
     }
 
     @Override
@@ -109,14 +72,14 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
     }
 
     //Вспомогательные методы маппинга рукотворного
-    private void mapEntityToStatement(Author entity, PreparedStatement statement) throws SQLException {
+    protected void mapEntityToStatement(Author entity, PreparedStatement statement) throws SQLException {
         statement.setString(1, entity.getName());
         statement.setDate(2, Date.valueOf(entity.getBirthDate()));
         statement.setDate(3, Date.valueOf(entity.getDeathDate()));
         statement.setString(4, entity.getDescription());
     }
 
-    private Author mapResultSetToEntity(ResultSet set) {
+    protected Author mapResultSetToEntity(ResultSet set) {
         try {
             Author author = new Author();
             author.setId(set.getInt("author_id"));

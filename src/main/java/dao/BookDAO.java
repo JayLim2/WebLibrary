@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BookDAO extends AbstractDAO<Book, Integer> {
@@ -37,42 +36,6 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
     @Override
     public List<Book> getAll() {
         return runQuery("SELECT * FROM books");
-    }
-
-    @Override
-    public List<Book> runQuery(String sql) {
-        List<Book> books = new ArrayList<>(20);
-        try (Connection connection = getConnection()) {
-            ResultSet set = connection
-                    .createStatement()
-                    .executeQuery(sql);
-            while (set.next()) {
-                Book book = mapResultSetToEntity(set);
-                if (book != null) {
-                    books.add(book);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return books;
-    }
-
-    @Override
-    public List<Book> runQueryWithParams(String sql, Object... params) {
-        List<Book> books = new ArrayList<>(20);
-        try (Connection connection = getConnection()) {
-            ResultSet set = getPreparedStatementResult(connection, sql, params);
-            while (set.next()) {
-                Book book = mapResultSetToEntity(set);
-                if (book != null) {
-                    books.add(book);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return books;
     }
 
     @Override
@@ -118,7 +81,7 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
     }
 
     //Вспомогательные методы маппинга рукотворного
-    private void mapEntityToStatement(Book entity, PreparedStatement statement) throws SQLException {
+    protected void mapEntityToStatement(Book entity, PreparedStatement statement) throws SQLException {
         statement.setString(1, entity.getTitle());
         statement.setInt(2, entity.getCreatedYear());
         statement.setInt(3, entity.getPublishedYear());
@@ -128,21 +91,24 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
         statement.setInt(7, entity.getAuthor().getId());
     }
 
-    private Book mapResultSetToEntity(ResultSet set) {
-        try {
-            Book book = new Book();
-            book.setId(set.getInt("book_id"));
-            book.setTitle(set.getString("title"));
-            book.setCreatedYear(set.getInt("created_year"));
-            book.setPublishedYear(set.getInt("published_year"));
-            book.setDescription(set.getString("description"));
-            book.setImageHash(set.getString("image_hash"));
-            book.setPublisher(publisherDAO.getById(set.getInt("publisher_id")));
-            book.setAuthor(authorDAO.getById(set.getInt("author_id")));
-            return book;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+    protected Book mapResultSetToEntity(ResultSet set) throws SQLException {
+        Book book = new Book();
+        book.setId(set.getInt("book_id"));
+        book.setTitle(set.getString("title"));
+        book.setCreatedYear(set.getInt("created_year"));
+        book.setPublishedYear(set.getInt("published_year"));
+        book.setDescription(set.getString("description"));
+        book.setImageHash(set.getString("image_hash"));
+        book.setPublisher(publisherDAO.getById(set.getInt("publisher_id")));
+        book.setAuthor(authorDAO.getById(set.getInt("author_id")));
+        return book;
+    }
+
+    public PublisherDAO getPublisherDAO() {
+        return publisherDAO;
+    }
+
+    public AuthorDAO getAuthorDAO() {
+        return authorDAO;
     }
 }

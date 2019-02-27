@@ -86,4 +86,8 @@ public class BooksService implements AbstractService<Book, Integer> {
     public List<Book> getByGenres(List<Genre> genres) {
         return null;
     }
+
+    public void addBookGenre(Book entity, Genre genre) {
+
+    }
 }

@@ -1,6 +1,7 @@
 package dao;
 
 import models.Genre;
+import models.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -81,11 +82,24 @@ public class GenreDAO extends AbstractDAO<Genre, Integer> {
     protected Genre mapResultSetToEntity(ResultSet set) {
         try {
             Genre genre = new Genre();
+            genre.setId(set.getInt(1));
             genre.setName(set.getString("genre_name"));
             return genre;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void saveFavoriteGenre(User user, Genre genre) {
+        try(Connection connection = getConnection()) {
+            PreparedStatement statement =
+                    connection.prepareStatement("INSERT INTO fav_genres(user_id, genre_id) VALUES (?, ?)");
+            statement.setInt(1, user.getId());
+            statement.setInt(2, genre.getId());
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

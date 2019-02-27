@@ -3,6 +3,8 @@ package services;
 import dao.BookDAO;
 import models.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 public class BooksService implements AbstractService<Book, Integer> {
@@ -87,7 +89,7 @@ public class BooksService implements AbstractService<Book, Integer> {
         return null;
     }
 
-    public void addBookGenre(Book entity, Genre genre) {
-
+    public void addBookGenre(Book book, Genre genre) {
+        bookDAO.addBookGenres(book, genre);
     }
 }

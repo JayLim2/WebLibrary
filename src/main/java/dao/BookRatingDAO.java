@@ -91,7 +91,7 @@ public class BookRatingDAO extends AbstractDAO<BookRating, Integer> {
     @Override
     protected BookRating mapResultSetToEntity(ResultSet set) throws SQLException {
         return new BookRating(
-                0,
+                set.getInt(1),
                 set.getInt("value"),
                 bookDAO.getById(set.getInt("book_id")),
                 userDAO.getById(set.getInt("user_id"))

@@ -39,7 +39,7 @@ public class GenresService implements AbstractService<Genre, Integer> {
         return genreDAO.delete(entity);
     }
 
-    public void saveFavoriteGenre(Genre genre, User user) {
-
+    public void saveFavoriteGenre(User user, Genre genre) {
+        genreDAO.saveFavoriteGenre(user, genre);
     }
 }

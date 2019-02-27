@@ -82,6 +82,7 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     protected Publisher mapResultSetToEntity(ResultSet set) {
         try {
             Publisher publisher = new Publisher();
+            publisher.setId(set.getInt(1));
             publisher.setTitle(set.getString("title"));
             return publisher;
         } catch (Exception e) {

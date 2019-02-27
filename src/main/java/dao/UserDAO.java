@@ -82,7 +82,7 @@ public class UserDAO extends AbstractDAO<User, Integer> {
     @Override
     protected User mapResultSetToEntity(ResultSet set) throws SQLException {
         return new User(
-                0,
+                set.getInt(1),
                 set.getString("login"),
                 set.getString("password")
         );

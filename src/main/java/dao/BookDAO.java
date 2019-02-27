@@ -1,6 +1,7 @@
 package dao;
 
 import models.Book;
+import models.Genre;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -93,7 +94,7 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
 
     protected Book mapResultSetToEntity(ResultSet set) throws SQLException {
         Book book = new Book();
-        book.setId(set.getInt("book_id"));
+        book.setId(set.getInt(1));
         book.setTitle(set.getString("title"));
         book.setCreatedYear(set.getInt("created_year"));
         book.setPublishedYear(set.getInt("published_year"));
@@ -102,6 +103,17 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
         book.setPublisher(publisherDAO.getById(set.getInt("publisher_id")));
         book.setAuthor(authorDAO.getById(set.getInt("author_id")));
         return book;
+    }
+
+    public void addBookGenres(Book book, Genre genre) {
+        try(Connection connection = getConnection()) {
+            PreparedStatement statement =
+                    connection.prepareStatement("INSERT INTO book_genres(book_id, genre_id) VALUES (?, ?)");
+            statement.setInt(1, book.getId());
+            statement.setInt(2, genre.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public PublisherDAO getPublisherDAO() {

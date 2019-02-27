@@ -64,7 +64,7 @@ create table if not exists books
       on update restrict on delete restrict,
   author_id      int
     constraint author_id_fk
-      references author (author_id)
+      references authors (author_id)
       on update restrict on delete restrict
 );
 

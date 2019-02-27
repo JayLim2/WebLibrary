@@ -15,13 +15,14 @@ import java.util.List;
 public abstract class AbstractDAO<E, PK extends Serializable> {
     private static final String DRIVER = "org.postgresql.Driver";
     private static final String SERVER_NAME = "localhost";
-    private static final int SERVER_PORT = 5432;
+    private static final int SERVER_PORT = 5433;
     private static final String DB_NAME = "WebLibrary";
     private static final String USER = "postgres";
     private static final String PASSWORD = "root";
     private static final String JDBC_URL;
 
-    private HikariPool connectionPool;
+    private static final HikariDataSource DATA_SOURCE;
+    private static final HikariPool connectionPool;
 
     static {
         JDBC_URL = "jdbc:postgresql://"
@@ -30,10 +31,9 @@ public abstract class AbstractDAO<E, PK extends Serializable> {
                 + SERVER_PORT
                 + "/"
                 + DB_NAME;
-    }
 
-    public AbstractDAO() {
         HikariConfig config = new HikariConfig();
+        config.setMaximumPoolSize(10);
         config.setJdbcUrl(JDBC_URL);
         config.setDriverClassName(DRIVER);
         config.addDataSourceProperty("serverName", SERVER_NAME);
@@ -41,8 +41,11 @@ public abstract class AbstractDAO<E, PK extends Serializable> {
         config.addDataSourceProperty("user", USER);
         config.addDataSourceProperty("password", PASSWORD);
         config.addDataSourceProperty("databaseName", DB_NAME);
-        HikariDataSource dataSource = new HikariDataSource(config);
-        connectionPool = new HikariPool(dataSource);
+        DATA_SOURCE = new HikariDataSource(config);
+        connectionPool = new HikariPool(DATA_SOURCE);
+    }
+
+    public AbstractDAO() {
     }
 
     public Connection getConnection() throws SQLException {

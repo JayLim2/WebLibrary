@@ -81,7 +81,7 @@ public class CustomListTypeDAO extends AbstractDAO<CustomListType, Integer> {
     @Override
     protected CustomListType mapResultSetToEntity(ResultSet set) throws SQLException {
         return new CustomListType(
-                0,
+                set.getInt(1),
                 set.getString("type_name")
         );
     }

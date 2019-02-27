@@ -15,13 +15,12 @@ public class WebLibraryApplication {
         //initialize();
 
         AuthorsService authorsService = new AuthorsService();
-
-        List<Author> authors = authorsService.getByBirthDateBetween(
-                LocalDate.of(1921, 1, 1),
-                LocalDate.of(1943, 1, 1)
-        );
-        authors = authorsService.getByDescription("som");
+        List<Author> authors = authorsService.getAll();
         authors.forEach(System.out::println);
+
+        BooksService booksService = new BooksService();
+        List<Book> books = booksService.getAll();
+        books.forEach(System.out::println);
     }
 
     public static void initialize() {
@@ -76,17 +75,20 @@ public class WebLibraryApplication {
                     encoder.encode(login.getBytes())
             );
             user.setPassword(pass);
+            userDAO.save(user);
         }
 
         //books
         for (int i = 1; i <= booksCount; i++) {
             Book book = new Book();
             book.setTitle("Book " + i);
-            book.setAuthor(authorDAO.getById(random.nextInt(authorsCount)));
-            book.setPublisher(publisherDAO.getById(random.nextInt(publishersCount)));
+            book.setAuthor(authorDAO.getById(random.nextInt(authorsCount) + 1));
+            book.setPublisher(publisherDAO.getById(random.nextInt(publishersCount) + 1));
             int createdYear = randomYear(1900, 2000);
             book.setCreatedYear(createdYear);
             book.setPublishedYear(createdYear + randomYear(10, 20));
+            book.setDescription("some description " + i);
+            book.setImageHash(encoder.encodeToString("image".getBytes()));
             bookDAO.save(book);
         }
 
@@ -94,8 +96,8 @@ public class WebLibraryApplication {
         for (int i = 1; i <= bookRatingsCount; i++) {
             BookRating rating = new BookRating();
             rating.setValue(random.nextInt(5) + 2);
-            rating.setBook(bookDAO.getById(random.nextInt(booksCount)));
-            rating.setUser(userDAO.getById(random.nextInt(usersCount)));
+            rating.setBook(bookDAO.getById(random.nextInt(booksCount) + 1));
+            rating.setUser(userDAO.getById(random.nextInt(usersCount) + 1));
             bookRatingDAO.save(rating);
         }
 
@@ -114,8 +116,8 @@ public class WebLibraryApplication {
             int bookGenresCount = random.nextInt(genresCount);
             for (int j = 0; j < bookGenresCount; j++) {
                 booksService.addBookGenre(
-                        booksService.getById(random.nextInt(booksCount)),
-                        genresService.getById(random.nextInt(genresCount))
+                        booksService.getById(random.nextInt(booksCount) + 1),
+                        genresService.getById(random.nextInt(genresCount) + 1)
                 );
             }
         }
@@ -124,9 +126,11 @@ public class WebLibraryApplication {
         for (int i = 1; i <= usersCount; i++) {
             int favGenresCount = random.nextInt(genresCount);
             for (int j = 0; j < favGenresCount; j++) {
+                int userId = random.nextInt(usersCount) + 1;
+                int genreId = random.nextInt(genresCount) + 1;
                 genresService.saveFavoriteGenre(
-                        genresService.getById(random.nextInt(genresCount)),
-                        userDAO.getById(random.nextInt(usersCount))
+                        userDAO.getById(userId),
+                        genresService.getById(genreId)
                 );
             }
         }

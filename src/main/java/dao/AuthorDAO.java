@@ -82,7 +82,7 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
     protected Author mapResultSetToEntity(ResultSet set) {
         try {
             Author author = new Author();
-            author.setId(set.getInt("author_id"));
+            author.setId(set.getInt(1));
             author.setName(set.getString("name"));
             LocalDate birthDate = set.getDate("birth_date").toLocalDate();
             LocalDate deathDate = set.getDate("death_date").toLocalDate();

@@ -8,10 +8,13 @@
     <artifactId>CourseProject</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+        <jetty.version>9.4.8.v20171121</jetty.version>
     </properties>
 
     <dependencies>
@@ -42,6 +45,16 @@
             <artifactId>javax.servlet.jsp-api</artifactId>
             <version>2.3.3</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>4.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.3.1-2</version>
         </dependency>
     </dependencies>
 

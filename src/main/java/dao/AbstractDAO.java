@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class AbstractDAO<E, PK extends Serializable> {
     private static final String DRIVER = "org.postgresql.Driver";
     private static final String SERVER_NAME = "localhost";
-    private static final int SERVER_PORT = 5433;
+    private static final int SERVER_PORT = 5432;
     private static final String DB_NAME = "WebLibrary";
     private static final String USER = "postgres";
     private static final String PASSWORD = "root";

@@ -1,7 +1,6 @@
 package dao;
 
-import models.Book;
-import models.Genre;
+import models.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,13 +8,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import static utils.DAOInstances.getAuthorDAO;
+import static utils.DAOInstances.getPublisherDAO;
+
 public class BookDAO extends AbstractDAO<Book, Integer> {
+    private static BookDAO instance;
+
     private PublisherDAO publisherDAO;
     private AuthorDAO authorDAO;
 
     public BookDAO() {
-        this.publisherDAO = new PublisherDAO();
-        this.authorDAO = new AuthorDAO();
+        this.publisherDAO = getPublisherDAO();
+        this.authorDAO = getAuthorDAO();
+    }
+
+    public static BookDAO getInstance() {
+        if (instance == null) {
+            instance = new BookDAO();
+        }
+        return instance;
     }
 
     @Override
@@ -105,7 +116,9 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
         return book;
     }
 
-    public void addBookGenres(Book book, Genre genre) {
+    //custom queries
+    // FIXME: 06.03.2019 плохо, очень плохо
+    public void addBookGenre(Book book, Genre genre) {
         try(Connection connection = getConnection()) {
             PreparedStatement statement =
                     connection.prepareStatement("INSERT INTO book_genres(book_id, genre_id) VALUES (?, ?)");
@@ -116,11 +129,54 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
         }
     }
 
-    public PublisherDAO getPublisherDAO() {
-        return publisherDAO;
+    public List<Book> getByTitle(String title) {
+        return null;
     }
 
-    public AuthorDAO getAuthorDAO() {
-        return authorDAO;
+    public List<Book> getByCreatedYears(int leftBorder, int rightBorder) {
+        String sql = "SELECT * FROM books WHERE created_year BETWEEN ? AND ?";
+        return runQueryWithParams(sql, leftBorder, rightBorder);
+    }
+
+    public List<Book> getByPublishedYears(int leftBorder, int rightBorder) {
+        String sql = "SELECT * FROM books WHERE published_year BETWEEN ? AND ?";
+        return runQueryWithParams(sql, leftBorder, rightBorder);
+    }
+
+    public void setBookRating(Book book, User user, int value) {
+
+    }
+
+    public BookRating getRating(Book book, User user) {
+        return null;
+    }
+
+    public List<BookRating> getAllRatings(Book book) {
+        return null;
+    }
+
+    public float getTotalRating(Book book) {
+        return 0;
+    }
+
+    public List<Book> getByRatings(float leftBorder, float rightBorder) {
+        return null;
+    }
+
+    public List<Book> getByAuthor(Author author) {
+        String sql = "SELECT * FROM books WHERE author_id = ?";
+        return runQueryWithParams(sql, author.getId());
+    }
+
+    public List<Book> getByPublisher(Publisher publisher) {
+        return null;
+    }
+
+    public List<Book> getCustomList(Book book, User user, CustomListType type) {
+        return null;
+    }
+
+    public List<Book> getByGenres(List<Genre> genres) {
+        return null;
     }
 }

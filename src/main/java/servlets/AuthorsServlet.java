@@ -1,7 +1,7 @@
 package servlets;
 
 import models.Author;
-import services.AuthorsService;
+import utils.ImageHashUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,19 +11,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+import static utils.DAOInstances.getAuthorDAO;
+
 @WebServlet(name = "authors", urlPatterns = {"/authors"})
 public class AuthorsServlet extends HttpServlet {
-    private AuthorsService authorsService;
-
-    public AuthorsServlet() {
-        this.authorsService = new AuthorsService();
-    }
-
     @Override
     protected void doGet(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse) throws ServletException, IOException {
 
-        List<Author> authors = authorsService.getAll();
+
+        List<Author> authors = getAuthorDAO().getAll();
+        authors.forEach(author -> {
+            if (author.getImageHash() == null) {
+                String s = ImageHashUtil.getDefaultAuthor();
+                author.setImageHash(s);
+            }
+        });
 
         httpServletRequest.setAttribute("authorsList", authors);
 

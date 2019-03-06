@@ -1,7 +1,6 @@
 package dao;
 
 import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.HikariPool;
 
 import java.io.Serializable;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractDAO<E, PK extends Serializable> {
-    private static final String DRIVER = "org.postgresql.Driver";
     private static final String SERVER_NAME = "localhost";
     private static final int SERVER_PORT = 5432;
     private static final String DB_NAME = "WebLibrary";
@@ -21,8 +19,7 @@ public abstract class AbstractDAO<E, PK extends Serializable> {
     private static final String PASSWORD = "root";
     private static final String JDBC_URL;
 
-    private static final HikariDataSource DATA_SOURCE;
-    private static final HikariPool connectionPool;
+    private static final HikariPool CONNECTION_POOL;
 
     static {
         JDBC_URL = "jdbc:postgresql://"
@@ -33,23 +30,18 @@ public abstract class AbstractDAO<E, PK extends Serializable> {
                 + DB_NAME;
 
         HikariConfig config = new HikariConfig();
-        config.setMaximumPoolSize(10);
         config.setJdbcUrl(JDBC_URL);
-        config.setDriverClassName(DRIVER);
-        config.addDataSourceProperty("serverName", SERVER_NAME);
-        config.addDataSourceProperty("port", SERVER_PORT);
-        config.addDataSourceProperty("user", USER);
-        config.addDataSourceProperty("password", PASSWORD);
-        config.addDataSourceProperty("databaseName", DB_NAME);
-        DATA_SOURCE = new HikariDataSource(config);
-        connectionPool = new HikariPool(DATA_SOURCE);
+        config.setUsername(USER);
+        config.setPassword(PASSWORD);
+        config.setMaximumPoolSize(10);
+        CONNECTION_POOL = new HikariPool(config);
     }
 
     public AbstractDAO() {
     }
 
     public Connection getConnection() throws SQLException {
-        return connectionPool.getConnection();
+        return CONNECTION_POOL.getConnection();
     }
 
     public ResultSet getPreparedStatementResult(Connection connection, String sql, Object... params) throws SQLException {

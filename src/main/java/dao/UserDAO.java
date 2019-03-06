@@ -9,6 +9,17 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class UserDAO extends AbstractDAO<User, Integer> {
+    private static UserDAO instance;
+
+    private UserDAO() {
+    }
+
+    public static UserDAO getInstance() {
+        if (instance == null) {
+            instance = new UserDAO();
+        }
+        return instance;
+    }
 
     @Override
     public User getById(Integer id) {

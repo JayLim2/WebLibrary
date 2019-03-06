@@ -1,0 +1,49 @@
+.data-block {
+    background: #f3f3f3;
+    padding: 20px;
+    font-size: 13pt;
+    margin: 15px 0;
+}
+
+.data-block-header {
+    display: block;
+    margin: 0 0 11px 0;
+    font-size: 16pt;
+}
+
+.data-block-header a {
+    color: black;
+}
+
+.data-block-header a:hover {
+    color: #100c57;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.table {
+    display: table;
+}
+
+.table-row {
+    display: table-row;
+}
+
+.table-cell {
+    display: table-cell;
+    vertical-align: top;
+    padding-right: 10px;
+}
+
+.poster-cell {
+    width: 200px
+}
+
+.poster-img {
+    width: inherit;
+    height: 300px;
+}
+
+img {
+    width: 100%;
+}

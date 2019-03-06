@@ -6,7 +6,21 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import static utils.DAOInstances.getBookDAO;
+
 public class AuthorDAO extends AbstractDAO<Author, Integer> {
+    private static AuthorDAO instance;
+
+    private AuthorDAO() {
+    }
+
+    public static AuthorDAO getInstance() {
+        if (instance == null) {
+            instance = new AuthorDAO();
+        }
+        return instance;
+    }
+
     @Override
     public Author getById(Integer id) {
         try (Connection connection = getConnection()) {
@@ -89,10 +103,26 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
             author.setBirthDate(birthDate);
             author.setDeathDate(deathDate);
             author.setDescription(set.getString("description"));
+            author.setBooks(getBookDAO().getByAuthor(author));
             return author;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Author> getByBirthDateBetween(LocalDate date1, LocalDate date2) {
+        String sql = "SELECT * FROM authors WHERE birth_date BETWEEN ? AND ?";
+        return runQueryWithParams(sql, Date.valueOf(date1), Date.valueOf(date2));
+    }
+
+    public List<Author> getByDeathDateBetween(LocalDate date1, LocalDate date2) {
+        String sql = "SELECT * FROM authors WHERE death_date BETWEEN ? AND ?";
+        return runQueryWithParams(sql, Date.valueOf(date1), Date.valueOf(date2));
+    }
+
+    public List<Author> getByDescription(String description) {
+        String sql = "SELECT * FROM authors WHERE description like ?";
+        return runQueryWithParams(sql, "%" + description + "%");
     }
 }

@@ -10,6 +10,18 @@ import java.util.List;
 
 public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
 
+    private static PublisherDAO instance;
+
+    private PublisherDAO() {
+    }
+
+    public static PublisherDAO getInstance() {
+        if (instance == null) {
+            instance = new PublisherDAO();
+        }
+        return instance;
+    }
+
     @Override
     public Publisher getById(Integer id) {
         try (Connection connection = getConnection()) {

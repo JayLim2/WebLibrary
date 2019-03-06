@@ -10,6 +10,19 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class GenreDAO extends AbstractDAO<Genre, Integer> {
+
+    private static GenreDAO instance;
+
+    private GenreDAO() {
+    }
+
+    public static GenreDAO getInstance() {
+        if (instance == null) {
+            instance = new GenreDAO();
+        }
+        return instance;
+    }
+
     @Override
     public Genre getById(Integer id) {
         try (Connection connection = getConnection()) {

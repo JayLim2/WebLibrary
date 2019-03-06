@@ -3,6 +3,8 @@ package models;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,4 +17,10 @@ public class Author {
     private LocalDate birthDate;
     private LocalDate deathDate;
     private String description;
+    private String imageHash;
+    private List<Book> books;
+
+    {
+        books = new ArrayList<>();
+    }
 }

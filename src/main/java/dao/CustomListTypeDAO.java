@@ -10,6 +10,18 @@ import java.util.List;
 
 public class CustomListTypeDAO extends AbstractDAO<CustomListType, Integer> {
 
+    private static CustomListTypeDAO instance;
+
+    private CustomListTypeDAO() {
+    }
+
+    public static CustomListTypeDAO getInstance() {
+        if (instance == null) {
+            instance = new CustomListTypeDAO();
+        }
+        return instance;
+    }
+
     @Override
     public CustomListType getById(Integer id) {
         try (Connection connection = getConnection()) {

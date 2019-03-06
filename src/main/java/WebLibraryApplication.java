@@ -1,29 +1,20 @@
-import dao.*;
-import models.*;
-import services.AuthorsService;
-import services.BooksService;
-import services.GenresService;
+import utils.DAOInstances;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
 import java.util.Random;
 
 public class WebLibraryApplication {
     public static void main(String[] args) {
         //initialize();
+        try {
 
-        AuthorsService authorsService = new AuthorsService();
-        List<Author> authors = authorsService.getAll();
-        authors.forEach(System.out::println);
-
-        BooksService booksService = new BooksService();
-        List<Book> books = booksService.getAll();
-        books.forEach(System.out::println);
+            DAOInstances.getBookDAO().getAll().forEach(System.out::println);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void initialize() {
+    /*public static void initialize() {
         AuthorDAO authorDAO = new AuthorDAO();
         PublisherDAO publisherDAO = new PublisherDAO();
         BookDAO bookDAO = new BookDAO();
@@ -48,6 +39,7 @@ public class WebLibraryApplication {
             author.setBirthDate(date);
             author.setDeathDate(randomOffsetDate(date));
             author.setDescription("some text about author " + i);
+            author.setImageHash(ImageHashUtil.getDefaultAuthor());
             authorDAO.save(author);
         }
 
@@ -108,16 +100,13 @@ public class WebLibraryApplication {
             customListTypeDAO.save(type);
         }
 
-        BooksService booksService = new BooksService();
-        GenresService genresService = new GenresService();
-
         //book genres
         for (int i = 1; i <= booksCount; i++) {
             int bookGenresCount = random.nextInt(genresCount);
             for (int j = 0; j < bookGenresCount; j++) {
-                booksService.addBookGenre(
-                        booksService.getById(random.nextInt(booksCount) + 1),
-                        genresService.getById(random.nextInt(genresCount) + 1)
+                bookDAO.addBookGenre(
+                        bookDAO.getById(random.nextInt(booksCount) + 1),
+                        genreDAO.getById(random.nextInt(genresCount) + 1)
                 );
             }
         }
@@ -128,9 +117,9 @@ public class WebLibraryApplication {
             for (int j = 0; j < favGenresCount; j++) {
                 int userId = random.nextInt(usersCount) + 1;
                 int genreId = random.nextInt(genresCount) + 1;
-                genresService.saveFavoriteGenre(
+                genreDAO.saveFavoriteGenre(
                         userDAO.getById(userId),
-                        genresService.getById(genreId)
+                        genreDAO.getById(genreId)
                 );
             }
         }
@@ -140,7 +129,7 @@ public class WebLibraryApplication {
 
         }
     }
-
+*/
     private static final Random random = new Random();
 
     private static LocalDate randomDate() {

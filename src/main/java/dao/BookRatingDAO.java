@@ -8,14 +8,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import static utils.DAOInstances.getBookDAO;
+import static utils.DAOInstances.getUserDAO;
+
 public class BookRatingDAO extends AbstractDAO<BookRating, Integer> {
+    private static BookRatingDAO instance;
 
     private BookDAO bookDAO;
     private UserDAO userDAO;
 
-    public BookRatingDAO() {
-        this.bookDAO = new BookDAO();
-        this.userDAO = new UserDAO();
+    private BookRatingDAO() {
+        this.bookDAO = getBookDAO();
+        this.userDAO = getUserDAO();
+    }
+
+    public static BookRatingDAO getInstance() {
+        if (instance == null) {
+            instance = new BookRatingDAO();
+        }
+        return instance;
     }
 
     @Override
@@ -96,13 +107,5 @@ public class BookRatingDAO extends AbstractDAO<BookRating, Integer> {
                 bookDAO.getById(set.getInt("book_id")),
                 userDAO.getById(set.getInt("user_id"))
         );
-    }
-
-    public BookDAO getBookDAO() {
-        return bookDAO;
-    }
-
-    public UserDAO getUserDAO() {
-        return userDAO;
     }
 }

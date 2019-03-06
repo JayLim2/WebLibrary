@@ -1,6 +1,7 @@
 package servlets;
 
 import models.Author;
+import models.Book;
 import utils.ImageHashUtil;
 
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static utils.DAOInstances.getAuthorDAO;
+import static utils.DAOInstances.getBookDAO;
 
 @WebServlet(name = "authors", urlPatterns = {"/authors"})
 public class AuthorsServlet extends HttpServlet {
@@ -19,12 +21,16 @@ public class AuthorsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse) throws ServletException, IOException {
 
-
         List<Author> authors = getAuthorDAO().getAll();
         authors.forEach(author -> {
             if (author.getImageHash() == null) {
                 String s = ImageHashUtil.getDefaultAuthor();
                 author.setImageHash(s);
+            }
+
+            if (author.getBooks() == null || author.getBooks().isEmpty()) {
+                List<Book> books = getBookDAO().getByAuthor(author);
+                author.setBooks(books);
             }
         });
 

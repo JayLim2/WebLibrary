@@ -4,9 +4,8 @@ import models.Author;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-
-import static utils.DAOInstances.getBookDAO;
 
 public class AuthorDAO extends AbstractDAO<Author, Integer> {
     private static AuthorDAO instance;
@@ -103,7 +102,8 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
             author.setBirthDate(birthDate);
             author.setDeathDate(deathDate);
             author.setDescription(set.getString("description"));
-            author.setBooks(getBookDAO().getByAuthor(author));
+            author.setBooks(new ArrayList<>());
+            //author.setBooks(getBookDAO().getByAuthor(author));
             return author;
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Hello world</title>
+    <title>Список авторов</title>
     <%@include file="libs.jsp" %>
     <meta charset="UTF-8">
 </head>
@@ -11,7 +11,6 @@
 <jsp:include page="menu.jsp"/>
 <c:set var="pattern" value="dd.MM.yyyy"/>
 <div class="container" style="margin-top: 25px">
-    <%--${authorsList}--%>
     <div>
         <c:forEach items="${authorsList}" var="author">
             <div class="data-block">

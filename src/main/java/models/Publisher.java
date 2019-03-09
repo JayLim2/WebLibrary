@@ -12,4 +12,5 @@ import lombok.Setter;
 public class Publisher {
     private int id;
     private String title;
+    private String address;
 }

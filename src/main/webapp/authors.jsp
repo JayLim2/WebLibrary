@@ -44,11 +44,18 @@
                             </div>
                             <div style="margin-top: 20px">
                                 <h4>Библиография</h4>
-                                <ul>
-                                    <c:forEach items="${author.books}" var="book">
-                                        <li>${book.title}</li>
-                                    </c:forEach>
-                                </ul>
+                                <c:choose>
+                                    <c:when test="${author.books.size() > 0}">
+                                        <ul>
+                                            <c:forEach items="${author.books}" var="book">
+                                                <li>${book.title}</li>
+                                            </c:forEach>
+                                        </ul>
+                                    </c:when>
+                                    <c:otherwise>
+                                        У нас еще нет книг этого автора.
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </div>

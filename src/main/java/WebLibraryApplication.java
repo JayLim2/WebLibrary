@@ -1,27 +1,32 @@
-import utils.DAOInstances;
+import dao.*;
+import models.*;
+import utils.ImageHashUtil;
 
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Random;
+
+import static utils.DAOInstances.*;
 
 public class WebLibraryApplication {
     public static void main(String[] args) {
         //initialize();
-        try {
 
-            DAOInstances.getBookDAO().getAll().forEach(System.out::println);
+        try {
+            getBookDAO().getAll().forEach(System.out::println);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /*public static void initialize() {
-        AuthorDAO authorDAO = new AuthorDAO();
-        PublisherDAO publisherDAO = new PublisherDAO();
-        BookDAO bookDAO = new BookDAO();
-        GenreDAO genreDAO = new GenreDAO();
-        UserDAO userDAO = new UserDAO();
-        BookRatingDAO bookRatingDAO = new BookRatingDAO();
-        CustomListTypeDAO customListTypeDAO = new CustomListTypeDAO();
+    public static void initialize() {
+        AuthorDAO authorDAO = getAuthorDAO();
+        PublisherDAO publisherDAO = getPublisherDAO();
+        BookDAO bookDAO = getBookDAO();
+        GenreDAO genreDAO = getGenreDAO();
+        UserDAO userDAO = getUserDAO();
+        BookRatingDAO bookRatingDAO = getBookRatingDAO();
+        CustomListTypeDAO customListTypeDAO = getCustomListTypeDAO();
 
         int authorsCount = 7;
         int publishersCount = 4;
@@ -129,7 +134,7 @@ public class WebLibraryApplication {
 
         }
     }
-*/
+
     private static final Random random = new Random();
 
     private static LocalDate randomDate() {

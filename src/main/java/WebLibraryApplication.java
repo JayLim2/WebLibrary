@@ -13,7 +13,7 @@ public class WebLibraryApplication {
         //initialize();
 
         try {
-            getBookDAO().getAll().forEach(System.out::println);
+            //getBookDAO().getAll().forEach(System.out::println);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,7 +85,7 @@ public class WebLibraryApplication {
             book.setCreatedYear(createdYear);
             book.setPublishedYear(createdYear + randomYear(10, 20));
             book.setDescription("some description " + i);
-            book.setImageHash(encoder.encodeToString("image".getBytes()));
+            book.setImageHash(ImageHashUtil.getDefaultBook());
             bookDAO.save(book);
         }
 

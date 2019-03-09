@@ -2,7 +2,6 @@ package servlets;
 
 import models.Author;
 import models.Book;
-import utils.ImageHashUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,11 +22,6 @@ public class AuthorsServlet extends HttpServlet {
 
         List<Author> authors = getAuthorDAO().getAll();
         authors.forEach(author -> {
-            if (author.getImageHash() == null) {
-                String s = ImageHashUtil.getDefaultAuthor();
-                author.setImageHash(s);
-            }
-
             if (author.getBooks() == null || author.getBooks().isEmpty()) {
                 List<Book> books = getBookDAO().getByAuthor(author);
                 author.setBooks(books);

@@ -71,6 +71,7 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
             PreparedStatement statement =
                     connection.prepareStatement("UPDATE books SET title = ?, created_year = ?, published_year = ?, description = ?, image_hash = ?, publisher_id = ?, author_id = ? WHERE book_id = ?");
             mapEntityToStatement(entity, statement);
+            statement.setInt(8, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,7 +118,6 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
     }
 
     //custom queries
-    // FIXME: 06.03.2019 плохо, очень плохо
     public void addBookGenre(Book book, Genre genre) {
         try(Connection connection = getConnection()) {
             PreparedStatement statement =

@@ -47,7 +47,7 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
                     connection
-                            .prepareStatement("INSERT INTO authors(name, birth_date, death_date, description) VALUES (?, ?, ?, ?)");
+                            .prepareStatement("INSERT INTO authors(name, birth_date, death_date, image_hash, description) VALUES (?, ?, ?, ?, ?)");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -61,8 +61,9 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("UPDATE authors SET name = ?, birth_date = ?, death_date = ?, description = ? WHERE author_id = ?");
+                    connection.prepareStatement("UPDATE authors SET name = ?, birth_date = ?, death_date = ?, image_hash = ?, description = ? WHERE author_id = ?");
             mapEntityToStatement(entity, statement);
+            statement.setInt(6, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +90,8 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
         statement.setString(1, entity.getName());
         statement.setDate(2, Date.valueOf(entity.getBirthDate()));
         statement.setDate(3, Date.valueOf(entity.getDeathDate()));
-        statement.setString(4, entity.getDescription());
+        statement.setString(4, entity.getImageHash());
+        statement.setString(5, entity.getDescription());
     }
 
     protected Author mapResultSetToEntity(ResultSet set) {
@@ -101,9 +103,9 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
             LocalDate deathDate = set.getDate("death_date").toLocalDate();
             author.setBirthDate(birthDate);
             author.setDeathDate(deathDate);
+            author.setImageHash(set.getString("image_hash"));
             author.setDescription(set.getString("description"));
             author.setBooks(new ArrayList<>());
-            //author.setBooks(getBookDAO().getByAuthor(author));
             return author;
         } catch (Exception e) {
             e.printStackTrace();

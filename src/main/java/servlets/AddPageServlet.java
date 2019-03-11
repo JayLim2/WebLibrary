@@ -1,14 +1,21 @@
 package servlets;
 
 import models.Author;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import utils.ImageHashUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -69,25 +76,86 @@ public class AddPageServlet extends HttpServlet {
         }
     }
 
+    // location to store file uploaded
+    private static final String UPLOAD_DIRECTORY = "upload";
+
+    // upload settings
+    private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3;  // 3MB
+    private static final int MAX_FILE_SIZE = 1024 * 1024 * 40; // 40MB
+    private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
+
+    private static final String ENCODING = "UTF-8";
+
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
     private void handleAddAuthorPostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String authorName = request.getParameter("authorName");
-        String birthDate = request.getParameter("birthDate");
-        String deathDate = request.getParameter("deathDate");
-        String description = request.getParameter("description");
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setSizeThreshold(MEMORY_THRESHOLD);
+        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
 
-        Author author = new Author();
-        author.setName(authorName);
-        author.setBirthDate(LocalDate.parse(birthDate));
-        author.setDeathDate(LocalDate.parse(deathDate));
-        author.setDescription(description);
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        upload.setFileSizeMax(MAX_FILE_SIZE);
+        upload.setSizeMax(MAX_REQUEST_SIZE);
 
-        String validatingMessage = validateAuthor(author);
-        if (!validatingMessage.isEmpty()) {
-            sendMessage(request, MessageType.ERROR, validatingMessage);
-        } else {
-            //DAOInstances.getAuthorDAO().save(author);
-            System.out.println(author);
+        try {
+            String authorName = null;
+            String birthDate = null;
+            String deathDate = null;
+            String description = null;
+            String imageHash = null;
+            List<FileItem> formItems = upload.parseRequest(request);
+            if (formItems != null) {
+                for (FileItem formItem : formItems) {
+                    if (!formItem.isFormField()) {
+                        if (formItem.getFieldName().equals("poster")) {
+                            byte[] fileBytes = formItem.get();
+                            imageHash = ImageHashUtil.encodeFromBytes(fileBytes);
+                        }
+                    } else {
+                        String fieldName = formItem.getFieldName();
+
+                        switch (fieldName) {
+                            case "authorName":
+                                authorName = formItem.getString(ENCODING);
+                                break;
+                            case "birthDate":
+                                birthDate = formItem.getString(ENCODING);
+                                break;
+                            case "deathDate":
+                                deathDate = formItem.getString(ENCODING);
+                                break;
+                            case "description":
+                                description = formItem.getString(ENCODING);
+                                break;
+                        }
+                    }
+                }
+
+                Author author = new Author();
+                author.setName(authorName);
+                if (birthDate != null && !birthDate.isEmpty())
+                    author.setBirthDate(LocalDate.parse(birthDate, DATE_TIME_FORMATTER));
+                if (deathDate != null && !deathDate.isEmpty())
+                    author.setDeathDate(LocalDate.parse(deathDate, DATE_TIME_FORMATTER));
+                author.setDescription(description);
+                author.setImageHash(imageHash);
+
+                String validatingMessage = validateAuthor(author);
+                if (!validatingMessage.isEmpty()) {
+                    sendMessage(request, MessageType.ERROR, validatingMessage);
+                } else {
+                    System.out.println(imageHash.length());
+                    //DAOInstances.getAuthorDAO().save(author);
+                }
+
+                System.out.println(author);
+
+                sendMessage(request, MessageType.INFORMATION, "Автор добавлен.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            sendMessage(request, MessageType.ERROR, "При обработке запроса произошла ошибка: " + ex.getMessage());
         }
 
         dispatchAddAuthor(request, response);

@@ -39,12 +39,16 @@ public class ImageHashUtil {
         try (FileInputStream in = new FileInputStream(image)) {
             byte[] imageData = new byte[(int) image.length()];
             if (in.read(imageData) > 0) {
-                return encoder.encodeToString(imageData);
+                return encodeFromBytes(imageData);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String encodeFromBytes(byte[] byteArray) {
+        return byteArray != null ? encoder.encodeToString(byteArray) : "";
     }
 
     public static void decode(String hash) {

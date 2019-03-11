@@ -22,6 +22,12 @@ import java.util.Optional;
 @WebServlet(name = "add", urlPatterns = {"/add"})
 public class AddPageServlet extends HttpServlet {
 
+    private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3;  // 3MB
+    private static final int MAX_FILE_SIZE = 1024 * 1024 * 40; // 40MB
+    private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
+    private static final String ENCODING = "UTF-8";
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String entityName = getEntityName(request);
@@ -75,18 +81,6 @@ public class AddPageServlet extends HttpServlet {
                 response.sendError(404);
         }
     }
-
-    // location to store file uploaded
-    private static final String UPLOAD_DIRECTORY = "upload";
-
-    // upload settings
-    private static final int MEMORY_THRESHOLD = 1024 * 1024 * 3;  // 3MB
-    private static final int MAX_FILE_SIZE = 1024 * 1024 * 40; // 40MB
-    private static final int MAX_REQUEST_SIZE = 1024 * 1024 * 50; // 50MB
-
-    private static final String ENCODING = "UTF-8";
-
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private void handleAddAuthorPostRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

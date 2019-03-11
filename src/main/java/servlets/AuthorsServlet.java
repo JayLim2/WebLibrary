@@ -17,8 +17,8 @@ import static utils.DAOInstances.getBookDAO;
 @WebServlet(name = "authors", urlPatterns = {"/authors"})
 public class AuthorsServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest httpServletRequest,
-                         HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response) throws ServletException, IOException {
 
         List<Author> authors = getAuthorDAO().getAll();
         authors.forEach(author -> {
@@ -28,11 +28,10 @@ public class AuthorsServlet extends HttpServlet {
             }
         });
 
-        httpServletRequest.setAttribute("authorsList", authors);
+        request.setAttribute("authorsList", authors);
 
-        httpServletRequest
-                .getRequestDispatcher("/authors.jsp")
-                .forward(httpServletRequest, httpServletResponse);
+        request.getRequestDispatcher("/authors.jsp")
+                .forward(request, response);
 
     }
 }

@@ -47,3 +47,39 @@
 img {
     width: 100%;
 }
+
+.message-box {
+    padding: 8px 20px;
+    font-size: 12pt;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.message-box.error {
+    background: #7f0005;
+}
+
+.message-box.info {
+    background: #21157f;
+}
+
+.message-box.warning {
+    background: #946800;
+}
+
+input[type="text"], input[type="password"] {
+    padding: 7px;
+    font-size: 12pt;
+    border: 2px solid black;
+    margin-bottom: 10px;
+}
+
+textarea {
+    resize: none;
+    padding: 7px;
+    font-size: 12pt;
+    border: 2px solid black;
+    width: 500px;
+    height: 200px;
+    margin-bottom: 10px;
+}

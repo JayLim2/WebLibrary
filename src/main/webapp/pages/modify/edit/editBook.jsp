@@ -1,8 +1,10 @@
 <%@ page import="models.Author" %>
+<%@ page import="models.Book" %>
 <%@ page import="models.Genre" %>
 <%@ page import="models.Publisher" %>
 <%@ page import="utils.DAOInstances" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Objects" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -14,14 +16,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Добавить книгу</title>
+    <title>Изменить книгу</title>
     <%@include file="/libs.jsp" %>
     <meta charset="UTF-8">
 </head>
 <body>
 <jsp:include page="/menu.jsp"/>
 <div class="container" style="margin-top: 40px;">
-    <h1>Добавить книгу</h1>
+    <h1>Изменить книгу</h1>
     <%
         Object error = request.getAttribute("error");
         if (error != null) {
@@ -31,6 +33,11 @@
     </div>
     <%
         }
+
+        Object bookAttr = request.getAttribute("book");
+        if (Objects.equals(bookAttr, null)) return;
+        else {
+            Book book = (Book) bookAttr;
     %>
 
     <%
@@ -51,7 +58,7 @@
                     <b>Название книги:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="title" style="width:300px;" value="test книга"/>
+                    <input type="text" name="title" style="width:300px;" value="${book.title}"/>
                 </div>
             </div>
             <div class="table-row">
@@ -59,7 +66,7 @@
                     <b>Год написания:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="createdYear" style="width:300px;"/>
+                    <input type="text" name="createdYear" style="width:300px;" value="${book.createdYear}"/>
                 </div>
             </div>
             <div class="table-row">
@@ -67,7 +74,7 @@
                     <b>Год публикации:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="publishedYear" style="width:300px;"/>
+                    <input type="text" name="publishedYear" style="width:300px;" value="${book.publishedYear}"/>
                 </div>
             </div>
 
@@ -80,8 +87,10 @@
                         <%
                             List<Author> authors = DAOInstances.getAuthorDAO().getAll();
                             for (Author author : authors) {
+                                int bookAuthorId = book.getAuthor() != null ? book.getAuthor().getId() : -1;
                         %>
-                        <option value="<%= author.getId() %>"><%= author.getName() %>
+                        <option <% if (bookAuthorId == author.getId()) out.println("selected"); %>
+                                value="<%= author.getId() %>"><%= author.getName() %>
                         </option>
                         <%
                             }
@@ -98,8 +107,10 @@
                         <%
                             List<Publisher> publishers = DAOInstances.getPublisherDAO().getAll();
                             for (Publisher publisher : publishers) {
+                                int bookPublisherId = book.getPublisher() != null ? book.getPublisher().getId() : -1;
                         %>
-                        <option value="<%= publisher.getId() %>"><%= publisher.getTitle() %>
+                        <option <% if (bookPublisherId == publisher.getId()) out.println("selected"); %>
+                                value="<%= publisher.getId() %>"><%= publisher.getTitle() %>
                         </option>
                         <%
                             }
@@ -115,9 +126,12 @@
                     <select name="genresList" multiple style="width:200px">
                         <%
                             List<Genre> genres = DAOInstances.getGenreDAO().getAll();
+                            List<Genre> bookGenres = DAOInstances.getBookDAO().getBookGenres(book);
+
                             for (Genre genre : genres) {
                         %>
-                        <option value="<%= genre.getId() %>"><%= genre.getName() %>
+                        <option <% if (bookGenres.contains(genre)) out.println("selected"); %>
+                                value="<%= genre.getId() %>"><%= genre.getName() %>
                         </option>
                         <%
                             }
@@ -154,6 +168,8 @@
             </div>
         </div>
     </form>
+
+    <% } %>
 </div>
 </body>
 </html>

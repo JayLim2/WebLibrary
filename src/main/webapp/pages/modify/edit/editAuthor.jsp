@@ -1,3 +1,7 @@
+<%@ page import="models.Author" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.util.Objects" %>
 <%--
   Created by IntelliJ IDEA.
   User: JayLim
@@ -8,14 +12,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Добавить автора</title>
+    <title>Изменить автора</title>
     <%@include file="/libs.jsp" %>
     <meta charset="UTF-8">
 </head>
 <body>
 <jsp:include page="/menu.jsp"/>
 <div class="container" style="margin-top: 40px;">
-    <h1>Добавить автора</h1>
+    <h1>Изменить автора</h1>
 
     <%
         Object error = request.getAttribute("error");
@@ -26,6 +30,9 @@
     </div>
     <%
         }
+
+        Object attr = request.getAttribute("author");
+        if (Objects.equals(attr, null)) return;
     %>
 
     <%
@@ -37,6 +44,8 @@
     </div>
     <%
         }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     %>
 
     <form action="" method="post" enctype="multipart/form-data">
@@ -46,7 +55,7 @@
                     <b>Имя автора:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="authorName" style="width:300px;" value="test издатель"/>
+                    <input type="text" name="authorName" style="width:300px;" value="${author.name}"/>
                 </div>
             </div>
             <div class="table-row">
@@ -54,7 +63,11 @@
                     <b>Дата рождения:</b>
                 </div>
                 <div class="table-cell">
+                    <%
+                        LocalDate birthDate = ((Author) request.getAttribute("author")).getBirthDate();
+                    %>
                     <input type="text" name="birthDate" class="form-control" readonly style="width:300px;"
+                           value="<% if(birthDate != null) out.println(formatter.format(birthDate)); %>"
                            id="birthDate"/>
                 </div>
             </div>
@@ -63,7 +76,11 @@
                     <b>Дата смерти:</b>
                 </div>
                 <div class="table-cell">
+                    <%
+                        LocalDate deathDate = ((Author) request.getAttribute("author")).getDeathDate();
+                    %>
                     <input type="text" name="deathDate" class="form-control" readonly style="width:300px;"
+                           value="<% if(deathDate != null) out.println(formatter.format(deathDate)); %>"
                            id="deathDate"/>
                 </div>
             </div>
@@ -72,7 +89,7 @@
                     <b>Об авторе:</b>
                 </div>
                 <div class="table-cell">
-                    <textarea name="description">some description</textarea>
+                    <textarea name="description">${author.description}</textarea>
                 </div>
             </div>
             <div class="table-row">
@@ -81,7 +98,6 @@
                 </div>
                 <div class="table-cell">
                     <input type="file" id="poster" name="poster"/>
-                    <input type="hidden" id="poster-hash" value="">
                 </div>
             </div>
 
@@ -95,17 +111,17 @@
             </div>
         </div>
     </form>
-</div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#birthDate').datepicker({
-            format: 'dd.mm.yyyy'
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#birthDate').datepicker({
+                format: 'dd.mm.yyyy'
+            });
+            $('#deathDate').datepicker({
+                format: 'dd.mm.yyyy'
+            });
         });
-        $('#deathDate').datepicker({
-            format: 'dd.mm.yyyy'
-        });
-    });
-</script>
+    </script>
+</div>
 </body>
 </html>

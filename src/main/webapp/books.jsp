@@ -1,3 +1,9 @@
+<%@ page import="models.Book" %>
+<%@ page import="models.Genre" %>
+<%@ page import="utils.DAOInstances" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Objects" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -11,7 +17,12 @@
 <jsp:include page="menu.jsp"/>
 <c:set var="pattern" value="dd.MM.yyyy"/>
 <div class="container" style="margin-top: 25px">
-    <%--${authorsList}--%>
+    <%
+        String path = request.getRequestURI();
+        if (Objects.equals(path, "/") || path.isEmpty()) {
+            response.sendRedirect("/books");
+        }
+    %>
     <div>
         <c:forEach items="${booksList}" var="book">
             <div class="data-block">
@@ -37,6 +48,17 @@
                             <br/>
                             <b>Издатель:</b>
                             <c:out value="${book.publisher.title}"/>
+                            <br/>
+                            <b>Жанры:</b>
+                            <%
+                                List<String> genres = new ArrayList<String>();
+                                List<Genre> genreList = DAOInstances.getBookDAO()
+                                        .getBookGenres((Book) pageContext.getAttribute("book"));
+                                for (Genre genre : genreList) {
+                                    genres.add(genre.getName());
+                                }
+                                out.println(String.join(", ", genres));
+                            %>
                             <br/>
                             <b>Оценка:</b>
                             <c:out value="-"/>

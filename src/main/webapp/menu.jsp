@@ -7,17 +7,14 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="books">
-                    Книги
-                    <span class="sr-only">(current)</span>
-                </a>
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/books">Книги</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="authors">Авторы</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/authors">Авторы</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="publishers">Издатели</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/publishers">Издатели</a>
             </li>
         </ul>
         <div class="dropdown">

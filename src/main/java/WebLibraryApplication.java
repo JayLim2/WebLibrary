@@ -106,7 +106,7 @@ public class WebLibraryApplication {
         }
 
         //book genres
-        for (int i = 1; i <= booksCount; i++) {
+        /*for (int i = 1; i <= booksCount; i++) {
             int bookGenresCount = random.nextInt(genresCount);
             for (int j = 0; j < bookGenresCount; j++) {
                 bookDAO.addBookGenre(
@@ -114,7 +114,7 @@ public class WebLibraryApplication {
                         genreDAO.getById(random.nextInt(genresCount) + 1)
                 );
             }
-        }
+        }*/
 
         //fav genres
         for (int i = 1; i <= usersCount; i++) {

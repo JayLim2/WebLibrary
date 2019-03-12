@@ -67,7 +67,7 @@ img {
     background: #946800;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], select {
     padding: 7px;
     font-size: 12pt;
     border: 2px solid black;

@@ -1,3 +1,4 @@
+<%@ page import="java.util.Objects" %>
 <%--
   Created by IntelliJ IDEA.
   User: JayLim
@@ -8,14 +9,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Добавить издателя</title>
+    <title>Изменить издателя</title>
     <%@include file="/libs.jsp" %>
     <meta charset="UTF-8">
 </head>
 <body>
 <jsp:include page="/menu.jsp"/>
 <div class="container" style="margin-top: 40px;">
-    <h1>Добавить издателя</h1>
+    <h1>Изменить издателя</h1>
     <%
         Object error = request.getAttribute("error");
         if (error != null) {
@@ -25,6 +26,9 @@
     </div>
     <%
         }
+
+        Object publAttr = request.getAttribute("publisher");
+        if (Objects.equals(publAttr, null)) return;
     %>
 
     <%
@@ -45,7 +49,7 @@
                     <b>Название издателя:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="title" style="width:300px;" value="test книга"/>
+                    <input type="text" name="title" style="width:300px;" value="${publisher.title}"/>
                 </div>
             </div>
             <div class="table-row">
@@ -53,7 +57,7 @@
                     <b>Адрес:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="address" style="width:300px;"/>
+                    <input type="text" name="address" style="width:300px;" value="${publisher.address}"/>
                 </div>
             </div>
 

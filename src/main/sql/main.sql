@@ -57,7 +57,7 @@ create table if not exists books
   created_year   int,
   published_year int,
   description    varchar(5000),
-  image_hash     varchar(100000),
+  image_hash     text,
   publisher_id   int
     constraint publisher_id_fk
       references publishers (publisher_id)

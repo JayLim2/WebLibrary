@@ -72,7 +72,7 @@ create table if not exists authors
   name        varchar(65) not null,
   birth_date  date,
   death_date  date,
-  image_hash  varchar(100000),
+  image_hash  text,
   description varchar(5000)
 );
 
@@ -93,7 +93,7 @@ create table if not exists books
   created_year   int,
   published_year int,
   description    varchar(5000),
-  image_hash     varchar(100000),
+  image_hash     text,
   publisher_id   int
     constraint publisher_id_fk
       references publishers (publisher_id)

@@ -100,8 +100,8 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
         statement.setInt(3, entity.getPublishedYear());
         statement.setString(4, entity.getDescription());
         statement.setString(5, entity.getImageHash());
-        statement.setInt(6, entity.getPublisher().getId());
-        statement.setInt(7, entity.getAuthor().getId());
+        statement.setInt(6, entity.getPublisher() != null ? entity.getPublisher().getId() : -1);
+        statement.setInt(7, entity.getAuthor() != null ? entity.getAuthor().getId() : -1);
     }
 
     protected Book mapResultSetToEntity(ResultSet set) throws SQLException {

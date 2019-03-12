@@ -9,9 +9,11 @@
 <body>
 <%@include file="menu.jsp" %>
 <div class="container" style="margin-top: 25px">
-    <input type="button" class="btn btn-dark" style="font-size:14pt;" value="Добавить книгу"
+    <input type="button" class="btn btn-dark"
+           style="font-size:14pt;"
+           value="Добавить издателя"
            onclick="document.location.href = '/add/publisher'"/>
-    <table class="table" style="border:1px solid black;">
+    <table class="table" style="margin-top:20px;border:1px solid black;">
         <thead class="thead-dark">
         <tr>
             <th scope="col">

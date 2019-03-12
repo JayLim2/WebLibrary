@@ -12,6 +12,8 @@
 <c:set var="pattern" value="dd.MM.yyyy"/>
 <div class="container" style="margin-top: 25px">
     <div>
+        <input type="button" class="btn btn-dark" style="font-size:14pt;" value="Добавить автора"
+               onclick="document.location.href = '/add/author'"/>
         <c:forEach items="${authorsList}" var="author">
             <div class="data-block">
                 <span class="data-block-header">

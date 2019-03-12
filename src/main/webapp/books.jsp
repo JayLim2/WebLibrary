@@ -24,6 +24,8 @@
         }
     %>
     <div>
+        <input type="button" class="btn btn-dark" style="font-size:14pt;" value="Добавить книгу"
+               onclick="document.location.href = '/add/book'"/>
         <c:forEach items="${booksList}" var="book">
             <div class="data-block">
                 <span class="data-block-header">

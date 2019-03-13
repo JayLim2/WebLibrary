@@ -16,24 +16,27 @@
     <table class="table" style="margin-top:20px;border:1px solid black;">
         <thead class="thead-dark">
         <tr>
-            <th scope="col">
+            <%--<th scope="col">
                 ID
-            </th>
-            <th scope="col">
+            </th>--%>
+            <th scope="col" style="width:250px;">
                 Название издателя
             </th>
             <th scope="col">
                 Адрес издателя
+            </th>
+            <th scope="col">
+
             </th>
         </tr>
         </thead>
         <tbody>
         <c:forEach items="${publishersList}" var="publisher">
             <tr>
-                <td>
+                <%--<td>
                         ${publisher.id}
-                </td>
-                <td>
+                </td>--%>
+                <td style="width:250px;">
                         ${publisher.title}
                 </td>
                 <td>
@@ -45,6 +48,20 @@
                             ${publisher.address}
                         </c:otherwise>
                     </c:choose>
+                </td>
+                <td style="width: 130px;">
+                    <div style="margin-bottom:10px;">
+                        <input type="button"
+                               class="btn btn-primary"
+                               style="font-size:14pt;"
+                               value="&#128393;"
+                               onclick="document.location.href = '/edit/publisher?id=${publisher.id}'"/>
+                        <input type="button"
+                               class="btn btn-danger"
+                               style="font-size:14pt;"
+                               value="&#128939;"
+                               onclick="document.location.href = '/delete/publisher?id=${publisher.id}'"/>
+                    </div>
                 </td>
             </tr>
         </c:forEach>

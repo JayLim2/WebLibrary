@@ -154,17 +154,21 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
     }
 
     //custom queries
-    // TODO: 12.03.2019 refactor
     public boolean addBookGenres(Book book, List<Genre> genres) {
+        if(book == null || genres == null || genres.isEmpty()) return false;
         int count = 0;
         try(Connection connection = getConnection()) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("INSERT INTO book_genres(book_id, genre_id) VALUES ");
+            List<String> genreSql = new ArrayList<>();
             for (Genre genre : genres) {
-                PreparedStatement statement =
-                        connection.prepareStatement("INSERT INTO book_genres(book_id, genre_id) VALUES (?, ?)");
-                statement.setInt(1, book.getId());
-                statement.setInt(2, genre.getId());
-                count += statement.executeUpdate();
+                genreSql.add("(" + book.getId() + ", " + genre.getId() + ")");
             }
+            builder.append(String.join(", ", genreSql));
+            String sql = builder.toString();
+            //System.out.println(sql);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            count = statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -225,19 +229,17 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
     public List<Genre> getBookGenres(Book book) {
         List<Genre> genres = new ArrayList<>();
         if (book != null) {
-            int bookId = book.getId() == 0 ? getNextId() : book.getId();
             try (Connection connection = getConnection()) {
+                int bookId = book.getId() == 0 ? getNextId(connection) : book.getId();
                 PreparedStatement statement = connection
                         .prepareStatement("SELECT * FROM book_genres WHERE book_id = ?");
                 statement.setInt(1, bookId);
                 ResultSet set = statement.executeQuery();
+                List<Integer> ids = new ArrayList<>();
                 while (set.next()) {
-                    int genreId = set.getInt("genre_id");
-                    Genre genre = DAOInstances.getGenreDAO().getById(genreId);
-                    if (genre != null) {
-                        genres.add(genre);
-                    }
+                    ids.add(set.getInt("genre_id"));
                 }
+                genres = DAOInstances.getGenreDAO().getByIds(ids);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -245,9 +247,9 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
         return genres;
     }
 
-    public int getNextId() {
+    public int getNextId(Connection connection) {
         int id = -1;
-        try (Connection connection = getConnection()) {
+        try {
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery("SELECT book_id_seq.last_value FROM book_id_seq");
             if (set.next()) {

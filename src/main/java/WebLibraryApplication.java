@@ -3,14 +3,16 @@ import models.*;
 import utils.ImageHashUtil;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Random;
 
 import static utils.DAOInstances.*;
 
 public class WebLibraryApplication {
     public static void main(String[] args) {
-        //initialize();
+        initialize();
 
         try {
             //getBookDAO().getAll().forEach(System.out::println);
@@ -106,15 +108,19 @@ public class WebLibraryApplication {
         }
 
         //book genres
-        /*for (int i = 1; i <= booksCount; i++) {
+        for (int i = 1; i <= booksCount; i++) {
             int bookGenresCount = random.nextInt(genresCount);
+            List<Genre> genres = new ArrayList<>();
             for (int j = 0; j < bookGenresCount; j++) {
-                bookDAO.addBookGenre(
-                        bookDAO.getById(random.nextInt(booksCount) + 1),
+                genres.add(
                         genreDAO.getById(random.nextInt(genresCount) + 1)
                 );
             }
-        }*/
+            bookDAO.addBookGenres(
+                    bookDAO.getById(random.nextInt(booksCount) + 1),
+                    genres
+            );
+        }
 
         //fav genres
         for (int i = 1; i <= usersCount; i++) {

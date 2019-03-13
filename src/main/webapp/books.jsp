@@ -42,6 +42,19 @@
                             <img class="poster-img" src="data:image/jpg;base64,<c:out value='${book.imageHash}'/>"/>
                         </div>
                         <div class="table-cell">
+                            <div style="margin-bottom:10px;">
+                                <input type="button"
+                                       class="btn btn-primary"
+                                       style="font-size:14pt;"
+                                       value="Изменить книгу"
+                                       onclick="document.location.href = '/edit/book?id=${book.id}'"/>
+                                <input type="button"
+                                       class="btn btn-danger"
+                                       style="font-size:14pt;"
+                                       value="Удалить книгу"
+                                       onclick="document.location.href = '/delete/book?id=${book.id}'"/>
+                            </div>
+
                             <b>Год написания:</b>
                             <c:out value="${book.createdYear}"/>
                             <br/>

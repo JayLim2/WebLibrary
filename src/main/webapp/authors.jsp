@@ -30,6 +30,19 @@
                             <img class="poster-img" src="data:image/jpg;base64,<c:out value='${author.imageHash}'/>"/>
                         </div>
                         <div class="table-cell">
+                            <div style="margin-bottom:10px;">
+                                <input type="button"
+                                       class="btn btn-primary"
+                                       style="font-size:14pt;"
+                                       value="Изменить автора"
+                                       onclick="document.location.href = '/edit/author?id=${author.id}'"/>
+                                <input type="button"
+                                       class="btn btn-danger"
+                                       style="font-size:14pt;"
+                                       value="Удалить автора"
+                                       onclick="document.location.href = '/delete/author?id=${author.id}'"/>
+                            </div>
+
                             <b>Дата рождения:</b>
                             <fmt:parseDate value="${author.birthDate}" pattern="yyyy-MM-dd" var="parsedDate"
                                            type="date"/>

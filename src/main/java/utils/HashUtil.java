@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.util.Base64;
 import java.util.Scanner;
 
-public class ImageHashUtil {
+public class HashUtil {
     private static final Base64.Encoder encoder;
     private static final Base64.Decoder decoder;
 
@@ -34,7 +34,7 @@ public class ImageHashUtil {
         return DEFAULT_BOOK;
     }
 
-    public static String encode(String imagePath) {
+    public static String encodeImage(String imagePath) {
         File image = new File(imagePath);
         try (FileInputStream in = new FileInputStream(image)) {
             byte[] imageData = new byte[(int) image.length()];
@@ -47,11 +47,11 @@ public class ImageHashUtil {
         return null;
     }
 
-    public static String encodeFromBytes(byte[] byteArray) {
-        return byteArray != null ? encoder.encodeToString(byteArray) : "";
+    public static void decodeImage(String hash) {
+        //coming soon
     }
 
-    public static void decode(String hash) {
-        //coming soon
+    public static String encodeFromBytes(byte[] byteArray) {
+        return byteArray != null ? encoder.encodeToString(byteArray) : "";
     }
 }

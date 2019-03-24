@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.ParameterHandler.tryParseInteger;
+
 public class Validators {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
@@ -71,7 +73,7 @@ public class Validators {
             if (!imageHashIsNull) {
                 author.setImageHash(imageHash);
             } else if (resultHashIsNull) {
-                author.setImageHash(ImageHashUtil.getDefaultAuthor());
+                author.setImageHash(HashUtil.getDefaultAuthor());
             }
         }
 
@@ -88,10 +90,10 @@ public class Validators {
             return message;
         }
 
-        int createdYearValue = ParameterHandler.tryParseInteger(createdYear);
-        int publishedYearValue = ParameterHandler.tryParseInteger(publishedYear);
-        int authorIdValue = ParameterHandler.tryParseInteger(authorId);
-        int publisherIdValue = ParameterHandler.tryParseInteger(publisherId);
+        int createdYearValue = tryParseInteger(createdYear);
+        int publishedYearValue = tryParseInteger(publishedYear);
+        int authorIdValue = tryParseInteger(authorId);
+        int publisherIdValue = tryParseInteger(publisherId);
         int currentYear = LocalDate.now().getYear();
 
         Author author = authorIdValue != -1 ?
@@ -137,7 +139,7 @@ public class Validators {
             if (!imageHashIsNull) {
                 book.setImageHash(imageHash);
             } else if (resultHashIsNull) {
-                book.setImageHash(ImageHashUtil.getDefaultBook());
+                book.setImageHash(HashUtil.getDefaultBook());
             }
         }
 

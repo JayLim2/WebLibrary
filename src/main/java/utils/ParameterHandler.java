@@ -41,7 +41,7 @@ public class ParameterHandler {
                 for (FileItem formItem : formItems) {
                     if (!formItem.isFormField() && formItem.getFieldName().equals("poster")) {
                         byte[] fileBytes = formItem.get();
-                        fields.put("imageHash", ImageHashUtil.encodeFromBytes(fileBytes));
+                        fields.put("imageHash", HashUtil.encodeFromBytes(fileBytes));
                     } else {
                         fields.put(formItem.getFieldName(), formItem.getString(ENCODING));
                     }
@@ -61,7 +61,7 @@ public class ParameterHandler {
                 for (FileItem formItem : formItems) {
                     if (!formItem.isFormField() && formItem.getFieldName().equals("poster")) {
                         byte[] fileBytes = formItem.get();
-                        fields.put("imageHash", ImageHashUtil.encodeFromBytes(fileBytes));
+                        fields.put("imageHash", HashUtil.encodeFromBytes(fileBytes));
                     } else {
                         String fieldName = formItem.getFieldName();
                         if (Objects.equals(fieldName, "genresList")) {

@@ -1,5 +1,6 @@
 package dao;
 
+import exceptions.InvalidCredentialsException;
 import models.User;
 
 import java.sql.Connection;
@@ -97,5 +98,26 @@ public class UserDAO extends AbstractDAO<User, Integer> {
                 set.getString("login"),
                 set.getString("password")
         );
+    }
+
+    public User getUserByCredentials(String login, String password) throws InvalidCredentialsException {
+        User user = null;
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE login = ?");
+            statement.setString(1, login);
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                user = mapResultSetToEntity(set);
+
+                if (!user.getPassword().equals(password)) {
+                    throw new InvalidCredentialsException("пароль введен неверно");
+                }
+            } else {
+                throw new InvalidCredentialsException("пользователь с таким логином не найден");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 }

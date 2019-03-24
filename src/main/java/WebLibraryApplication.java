@@ -1,6 +1,6 @@
 import dao.*;
 import models.*;
-import utils.ImageHashUtil;
+import utils.HashUtil;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class WebLibraryApplication {
             author.setBirthDate(date);
             author.setDeathDate(randomOffsetDate(date));
             author.setDescription("some text about author " + i);
-            author.setImageHash(ImageHashUtil.getDefaultAuthor());
+            author.setImageHash(HashUtil.getDefaultAuthor());
             authorDAO.save(author);
         }
 
@@ -87,7 +87,7 @@ public class WebLibraryApplication {
             book.setCreatedYear(createdYear);
             book.setPublishedYear(createdYear + randomYear(10, 20));
             book.setDescription("some description " + i);
-            book.setImageHash(ImageHashUtil.getDefaultBook());
+            book.setImageHash(HashUtil.getDefaultBook());
             bookDAO.save(book);
         }
 

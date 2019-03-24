@@ -1,3 +1,4 @@
+<%@ page import="models.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/">WebLibrary</a>
@@ -18,16 +19,36 @@
             </li>
         </ul>
         <div class="dropdown">
+            <%
+                Object userObject = session.getAttribute("user");
+                User user;
+                boolean isValidAuth = userObject instanceof User;
+                if (isValidAuth) {
+                    user = (User) userObject;
+            %>
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Гость
+                <%= user.getLogin() %>
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                 <a class="dropdown-item" href="#">Мой профиль</a>
                 <a class="dropdown-item" href="#">Мои рекомендации</a>
                 <a class="dropdown-item" href="#">Мои оценки</a>
-                <a class="dropdown-item" href="#">Выйти</a>
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Выйти</a>
             </div>
+            <%
+            } else {
+            %>
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Гость
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/login">Войти</a>
+            </div>
+            <%
+                }
+            %>
         </div>
     </div>
 </nav>

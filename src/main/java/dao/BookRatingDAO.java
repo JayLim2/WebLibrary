@@ -96,7 +96,7 @@ public class BookRatingDAO extends AbstractDAO<BookRating, Integer> {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("INSERT INTO book_ratings(value, book_id, user_id) VALUES (?, ?, ?)");
+                    connection.prepareStatement("INSERT INTO book_ratings(value, book_id, user_id) VALUES (?, ?, ?) ON CONFLICT (book_id, user_id) DO NOTHING ");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -132,6 +132,27 @@ public class BookRatingDAO extends AbstractDAO<BookRating, Integer> {
         }
         return false;
     }
+
+    public boolean saveOrUpdate(BookRating entity) {
+        if (entity == null || entity.getUser() == null || entity.getBook() == null) return false;
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("SELECT rating_id FROM book_ratings WHERE user_id = ? AND book_id = ?");
+            statement.setInt(1, entity.getUser().getId());
+            statement.setInt(2, entity.getBook().getId());
+            ResultSet set = statement.executeQuery();
+            if (set.next()) {
+                int ratingId = set.getInt(1);
+                entity.setId(ratingId);
+                return update(entity);
+            } else {
+                return save(entity);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     @Override
     protected void mapEntityToStatement(BookRating entity, PreparedStatement statement) throws SQLException {

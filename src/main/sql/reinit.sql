@@ -147,7 +147,9 @@ create table if not exists book_ratings
   user_id   int
     constraint user_id_fk
       references "users" (user_id)
-      on update restrict on delete restrict
+      on update restrict on delete restrict,
+  constraint book_ratings_ak
+    unique (user_id, book_id)
 );
 
 create table if not exists book_genres

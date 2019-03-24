@@ -13,12 +13,6 @@ import static utils.DAOInstances.*;
 public class WebLibraryApplication {
     public static void main(String[] args) {
         initialize();
-
-        try {
-            //getBookDAO().getAll().forEach(System.out::println);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void initialize() {
@@ -128,7 +122,7 @@ public class WebLibraryApplication {
             for (int j = 0; j < favGenresCount; j++) {
                 int userId = random.nextInt(usersCount) + 1;
                 int genreId = random.nextInt(genresCount) + 1;
-                genreDAO.saveFavoriteGenre(
+                genreDAO.saveFavoriteGenreByUser(
                         userDAO.getById(userId),
                         genreDAO.getById(genreId)
                 );

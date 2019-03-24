@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void dispatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/pages/auth/login.jsp")
+        request.getRequestDispatcher("/pages/users/login.jsp")
                 .forward(request, response);
     }
 }

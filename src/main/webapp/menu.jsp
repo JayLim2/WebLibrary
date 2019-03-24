@@ -31,9 +31,12 @@
                 <%= user.getLogin() %>
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Мой профиль</a>
-                <a class="dropdown-item" href="#">Мои рекомендации</a>
-                <a class="dropdown-item" href="#">Мои оценки</a>
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/user/profile">Мой профиль</a>
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/user/recommendations">Мои
+                    рекомендации</a>
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/user/ratings">Мои оценки</a>
+                <a class="dropdown-item" href="${pageContext.request.contextPath}/user/favoriteGenres">Мои избранные
+                    жанры</a>
                 <a class="dropdown-item" href="${pageContext.request.contextPath}/logout">Выйти</a>
             </div>
             <%

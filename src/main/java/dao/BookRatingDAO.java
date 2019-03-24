@@ -1,6 +1,8 @@
 package dao;
 
+import models.Book;
 import models.BookRating;
+import models.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,6 +50,45 @@ public class BookRatingDAO extends AbstractDAO<BookRating, Integer> {
     @Override
     public List<BookRating> getAll() {
         return runQuery("SELECT * FROM book_ratings");
+    }
+
+    public List<BookRating> getByUser(User user) {
+        List<BookRating> bookRatings = null;
+        if (user != null) {
+            bookRatings = runQueryWithParams("SELECT * FROM book_ratings WHERE user_id = ?", user.getId());
+        }
+        return bookRatings;
+    }
+
+    public float getByBook(Book book) {
+        float value = 0F;
+        if (book != null) {
+            List<BookRating> bookRatings = runQueryWithParams("SELECT * FROM book_ratings WHERE book_id = ?", book.getId());
+            for (BookRating bookRating : bookRatings) {
+                value += bookRating.getValue();
+            }
+            value /= bookRatings.size();
+            value = (float) Math.round(value * 100) / 100;
+        }
+        return value;
+    }
+
+    public BookRating getByUserAndBook(User user, Book book) {
+        BookRating bookRating = null;
+        try (Connection connection = getConnection()) {
+            if (user != null && book != null) {
+                PreparedStatement statement = connection.prepareStatement("SELECT * FROM book_ratings WHERE user_id = ? AND book_id = ?");
+                statement.setInt(1, user.getId());
+                statement.setInt(2, book.getId());
+                ResultSet set = statement.executeQuery();
+                if (set.next()) {
+                    bookRating = mapResultSetToEntity(set);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bookRating;
     }
 
     @Override

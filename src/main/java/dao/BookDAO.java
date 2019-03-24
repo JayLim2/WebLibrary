@@ -166,8 +166,11 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
             }
             builder.append(String.join(", ", genreSql));
             String sql = builder.toString();
-            //System.out.println(sql);
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO book_genres(book_id, genre_id) VALUES "
+                            + String.join(", ", genreSql)
+                            + "ON CONFLICT (book_id, genre_id) DO NOTHING"
+            );
             count = statement.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

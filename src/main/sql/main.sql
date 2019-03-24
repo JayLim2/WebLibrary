@@ -122,10 +122,13 @@ create table if not exists book_genres
   genre_id int
     constraint genre_id_fk
       references genres (genre_id)
-      on update restrict on delete restrict
+      on update restrict on delete restrict,
+  constraint book_genres_pk
+    primary key (book_id, genre_id)
 );
 
-create table if not exists fav_genres
+
+create table fav_genres
 (
   user_id  int
     constraint user_id_fk
@@ -134,7 +137,9 @@ create table if not exists fav_genres
   genre_id int
     constraint genre_id_fk
       references genres (genre_id)
-      on update restrict on delete restrict
+      on update restrict on delete restrict,
+  constraint fav_genres_pk
+    primary key (user_id, genre_id)
 );
 
 create table if not exists custom_list_element
@@ -150,5 +155,7 @@ create table if not exists custom_list_element
   book_id int
     constraint book_id_fk
       references books (book_id)
-      on update restrict on delete restrict
+      on update restrict on delete restrict,
+  constraint custom_list_element_pk
+    primary key (type_id, user_id, book_id)
 );

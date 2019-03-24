@@ -49,6 +49,7 @@
     %>
 
     <form action="" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="${author.id}"/>
         <div class="table">
             <div class="table-row">
                 <div class="table-cell">
@@ -106,7 +107,7 @@
                 </div>
                 <div class="table-cell">
                     <br/>
-                    <input type="submit" class="btn btn-dark" value="Добавить автора">
+                    <input type="submit" class="btn btn-dark" value="Сохранить изменения">
                 </div>
             </div>
         </div>

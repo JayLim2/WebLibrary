@@ -46,7 +46,7 @@
                     <b>Имя автора:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="authorName" style="width:300px;" value="test издатель"/>
+                    <input type="text" name="authorName" style="width:300px;" value="test автор"/>
                 </div>
             </div>
             <div class="table-row">

@@ -43,6 +43,7 @@
     %>
 
     <form action="" method="post">
+        <input type="hidden" name="id" value="${publisher.id}"/>
         <div class="table">
             <div class="table-row">
                 <div class="table-cell">
@@ -66,7 +67,7 @@
                 </div>
                 <div class="table-cell">
                     <br/>
-                    <input type="submit" class="btn btn-dark" value="Добавить издателя">
+                    <input type="submit" class="btn btn-dark" value="Сохранить изменения">
                 </div>
             </div>
         </div>

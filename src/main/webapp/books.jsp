@@ -1,8 +1,10 @@
 <%@ page import="models.Book" %>
+<%@ page import="models.BookRating" %>
 <%@ page import="models.Genre" %>
 <%@ page import="utils.DAOInstances" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Map" %>
 <%@ page import="java.util.Objects" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -29,6 +31,13 @@
                style="font-size:14pt;"
                value="Добавить книгу"
                onclick="document.location.href = '/add/book'"/>
+
+        <%
+            boolean isAuthenticated = session.getAttribute("user") != null;
+            Map<Integer, BookRating> ratingsMap = (Map<Integer, BookRating>) request.getAttribute("booksRatings");
+        %>
+
+
         <c:forEach items="${booksList}" var="book">
             <div class="data-block">
                 <span class="data-block-header">
@@ -78,8 +87,61 @@
                                 out.println(String.join(", ", genres));
                             %>
                             <br/>
+                            <!-- stars -->
+
                             <b>Оценка:</b>
-                            <c:out value="-"/>
+
+                            <%
+                                Book book = (Book) pageContext.getAttribute("book");
+                                BookRating currentBookRating = ratingsMap.get(book.getId());
+                                int ratingValue = currentBookRating != null ? currentBookRating.getValue() : 0;
+                                float totalRatingValue = DAOInstances.getBookRatingDAO().getByBook(book);
+                            %>
+
+                            <div style="display:table;margin-top: 10px;">
+                                <div style="display:table-row;">
+                                    <div style="display:table-cell;width:110px;vertical-align: top; padding-right:10px;">
+                                        <%
+                                            if (isAuthenticated) {
+                                        %>
+                                        <div class="review_stars_wrap">
+                                            <div id="review_stars">
+                                                <%
+                                                    for (int i = 5; i > 0; i--) {
+                                                %>
+                                                <input id="star-<%=i-1%>-${book.id}" type="radio"
+                                                       name="stars-${book.id}"
+                                                       onclick="updateRating(${book.id}, <%=i%>)"
+                                                       <% if(ratingValue == i) { %>checked<% } %>
+                                                />
+                                                <label for="star-<%=i-1%>-${book.id}">
+                                                    <i class="fas fa-star"></i>
+                                                </label>
+                                                <%
+                                                    }
+                                                %>
+                                            </div>
+                                        </div>
+                                        <%
+                                        } else {
+                                        %>
+                                        <span style="font-size:10pt">
+                                                <a target="_blank" href="${pageContext.request.contextPath}/login">Войдите</a>, чтобы оценивать
+                                            </span>
+                                        <%
+                                            }
+                                        %>
+
+
+                                    </div>
+                                    <div style="display:table-cell;vertical-align: top;padding-right:10px;">
+                                        <b><%= totalRatingValue %>
+                                        </b>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- /stars -->
 
                             <div style="margin-top: 20px">
                                 <h4>Описание книги</h4>

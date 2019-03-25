@@ -112,6 +112,7 @@ public class BookRatingDAO extends AbstractDAO<BookRating, Integer> {
             PreparedStatement statement =
                     connection.prepareStatement("UPDATE book_ratings SET value = ?, book_id = ?, user_id = ? WHERE rating_id = ?");
             mapEntityToStatement(entity, statement);
+            statement.setInt(4, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

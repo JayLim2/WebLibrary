@@ -160,7 +160,7 @@ public class Validators {
             message = "Название издателя не должно быть больше " + PUBLISHER_TITLE_MAX + " символов.";
         }
 
-        if (!message.isEmpty()) {
+        if (message.isEmpty()) {
             publisher.setTitle(title);
             publisher.setAddress(address);
         }

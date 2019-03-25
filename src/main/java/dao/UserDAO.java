@@ -64,6 +64,7 @@ public class UserDAO extends AbstractDAO<User, Integer> {
             PreparedStatement statement =
                     connection.prepareStatement("UPDATE users SET login = ?, password = ? WHERE user_id = ?");
             mapEntityToStatement(entity, statement);
+            statement.setInt(3, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

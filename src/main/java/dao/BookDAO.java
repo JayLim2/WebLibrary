@@ -6,6 +6,7 @@ import utils.DAOInstances;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static utils.DAOInstances.getAuthorDAO;
 import static utils.DAOInstances.getPublisherDAO;
@@ -227,6 +228,33 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
 
     public List<Book> getByGenres(List<Genre> genres) {
         return null;
+    }
+
+    public List<Book> getByGenres(List<Genre> genres, int count, boolean isRandomOrder) {
+        List<Book> books = new ArrayList<>(count);
+        if (genres == null || count <= 0) {
+            return books;
+        } else {
+            try (Connection connection = getConnection()) {
+                String genresPartOfQuery = genres.stream().map(genre -> Integer.toString(genre.getId())).collect(Collectors.joining(","));
+                Statement statement = connection.createStatement();
+                String sql = "SELECT b.book_id, title, created_year, published_year, description, image_hash, publisher_id, author_id FROM book_genres JOIN books b on book_genres.book_id = b.book_id WHERE genre_id IN (" + genresPartOfQuery + ") ";
+                if (isRandomOrder) {
+                    sql += " ORDER BY random()";
+                }
+                ResultSet set = statement.executeQuery(sql);
+                for (int i = 0; set.next() && i < count; i++) {
+                    Book book = mapResultSetToEntity(set);
+                    if (book != null) {
+                        books.add(book);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return books;
+        }
     }
 
     public List<Genre> getBookGenres(Book book) {

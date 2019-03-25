@@ -25,7 +25,7 @@ public class DeletePublisherServlet extends HttpServlet {
         if (publisher == null) {
             sendMessage(request, MessageType.ERROR, "Издатель с таким id не существует.");
         } else if (DAOInstances.getPublisherDAO().delete(publisher)) {
-            sendMessage(request, MessageType.INFORMATION, "Издатель успешно удалена.");
+            sendMessage(request, MessageType.INFORMATION, "Издатель успешно удален.");
         } else {
             sendMessage(request, MessageType.ERROR, "Ошибка при удалении издателя.");
         }

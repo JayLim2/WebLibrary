@@ -96,6 +96,15 @@
                                 BookRating currentBookRating = ratingsMap.get(book.getId());
                                 int ratingValue = currentBookRating != null ? currentBookRating.getValue() : 0;
                                 float totalRatingValue = DAOInstances.getBookRatingDAO().getByBook(book);
+                                String totalRatingColor;
+                                if (Float.compare(totalRatingValue, 2) < 0) {
+                                    totalRatingColor = "red";
+                                } else if (Float.compare(totalRatingValue, 3.5f) < 0) {
+                                    totalRatingColor = "gray";
+                                } else {
+                                    totalRatingColor = "green";
+                                }
+                                pageContext.setAttribute("color", totalRatingColor);
                             %>
 
                             <div style="display:table;margin-top: 10px;">
@@ -135,7 +144,7 @@
 
                                     </div>
                                     <div style="display:table-cell;vertical-align: top;padding-right:10px;">
-                                        <b><%= totalRatingValue %>
+                                        <b style="color:${color}"><%= totalRatingValue %>
                                         </b>
                                     </div>
                                 </div>

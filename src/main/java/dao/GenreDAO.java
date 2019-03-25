@@ -96,6 +96,7 @@ public class GenreDAO extends AbstractDAO<Genre, Integer> {
             PreparedStatement statement =
                     connection.prepareStatement("UPDATE genres SET genre_name = ? WHERE genre_id = ?");
             mapEntityToStatement(entity, statement);
+            statement.setInt(2, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

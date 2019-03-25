@@ -82,7 +82,8 @@ create table if not exists publishers
   publisher_id int default nextval('publisher_id_seq')
     constraint publishers_pk
       primary key,
-  title        varchar(150) not null
+  title        varchar(150) not null,
+  address      varchar(300)
 );
 
 create table if not exists books

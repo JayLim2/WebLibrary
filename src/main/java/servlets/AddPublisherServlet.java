@@ -15,7 +15,7 @@ import static utils.MessageSender.sendMessage;
 import static utils.Validators.validatePublisherData;
 
 @WebServlet("/add/publisher")
-public class AddPublisher extends HttpServlet {
+public class AddPublisherServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         dispatchAddPublisher(request, response);
@@ -39,7 +39,7 @@ public class AddPublisher extends HttpServlet {
     }
 
     private void dispatchAddPublisher(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/pages/modify/add/addPublishers.jsp")
+        request.getRequestDispatcher("/pages/modify/add/addPublisher.jsp")
                 .forward(request, response);
     }
 }

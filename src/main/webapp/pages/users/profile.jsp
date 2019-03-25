@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Добавить издателя</title>
+    <title>Мой профиль</title>
     <%@include file="/libs.jsp" %>
     <meta charset="UTF-8">
 </head>
@@ -38,7 +38,6 @@
         }
     %>
 
-    <h4>Избранные жанры</h4>
     -
 </div>
 </body>

@@ -48,7 +48,7 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("INSERT INTO publishers(title) VALUES (?)");
+                    connection.prepareStatement("INSERT INTO publishers(title, address) VALUES (?, ?)");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -62,8 +62,9 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("UPDATE publishers SET title = ? WHERE publisher_id = ?");
+                    connection.prepareStatement("UPDATE publishers SET title = ?, address = ? WHERE publisher_id = ?");
             mapEntityToStatement(entity, statement);
+            statement.setInt(3, entity.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,6 +89,7 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
     @Override
     protected void mapEntityToStatement(Publisher entity, PreparedStatement statement) throws SQLException {
         statement.setString(1, entity.getTitle());
+        statement.setString(2, entity.getAddress());
     }
 
     @Override
@@ -96,6 +98,7 @@ public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
             Publisher publisher = new Publisher();
             publisher.setId(set.getInt(1));
             publisher.setTitle(set.getString("title"));
+            publisher.setAddress(set.getString("address"));
             return publisher;
         } catch (Exception e) {
             e.printStackTrace();

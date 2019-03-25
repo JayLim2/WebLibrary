@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static utils.MessageSender.sendMessage;
@@ -48,7 +49,7 @@ public class FavoriteGenresServlet extends HttpServlet {
                 User user = (User) userObject;
 
                 Map<String, String[]> params = request.getParameterMap();
-                String[] genresList = params.get("genresList");
+                String[] genresList = Optional.ofNullable(params.get("genresList")).orElse(new String[]{});
 
                 List<Genre> currentUserFavoriteGenres = DAOInstances.getGenreDAO().getByIds(
                         Arrays.stream(genresList)

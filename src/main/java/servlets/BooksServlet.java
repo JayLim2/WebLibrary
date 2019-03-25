@@ -4,6 +4,7 @@ import models.Book;
 import models.BookRating;
 import models.User;
 import utils.DAOInstances;
+import utils.DatabaseInitializer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +23,8 @@ public class BooksServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException, IOException {
+
+        DatabaseInitializer.initializeByTestData();
 
         List<Book> books = getBookDAO().getAll();
         request.setAttribute("booksList", books);

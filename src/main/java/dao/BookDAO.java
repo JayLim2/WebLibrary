@@ -1,6 +1,8 @@
 package dao;
 
-import models.*;
+import models.Author;
+import models.Book;
+import models.Genre;
 import utils.DAOInstances;
 
 import java.sql.*;
@@ -159,14 +161,10 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
         if(book == null || genres == null || genres.isEmpty()) return false;
         int count = 0;
         try(Connection connection = getConnection()) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("INSERT INTO book_genres(book_id, genre_id) VALUES ");
             List<String> genreSql = new ArrayList<>();
             for (Genre genre : genres) {
                 genreSql.add("(" + book.getId() + ", " + genre.getId() + ")");
             }
-            builder.append(String.join(", ", genreSql));
-            String sql = builder.toString();
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO book_genres(book_id, genre_id) VALUES "
                             + String.join(", ", genreSql)
@@ -179,55 +177,9 @@ public class BookDAO extends AbstractDAO<Book, Integer> {
         return count > 0;
     }
 
-    public List<Book> getByTitle(String title) {
-        return null;
-    }
-
-    public List<Book> getByCreatedYears(int leftBorder, int rightBorder) {
-        String sql = "SELECT * FROM books WHERE created_year BETWEEN ? AND ?";
-        return runQueryWithParams(sql, leftBorder, rightBorder);
-    }
-
-    public List<Book> getByPublishedYears(int leftBorder, int rightBorder) {
-        String sql = "SELECT * FROM books WHERE published_year BETWEEN ? AND ?";
-        return runQueryWithParams(sql, leftBorder, rightBorder);
-    }
-
-    public void setBookRating(Book book, User user, int value) {
-
-    }
-
-    public BookRating getRating(Book book, User user) {
-        return null;
-    }
-
-    public List<BookRating> getAllRatings(Book book) {
-        return null;
-    }
-
-    public float getTotalRating(Book book) {
-        return 0;
-    }
-
-    public List<Book> getByRatings(float leftBorder, float rightBorder) {
-        return null;
-    }
-
     public List<Book> getByAuthor(Author author) {
         String sql = "SELECT * FROM books WHERE author_id = ?";
         return runQueryWithParams(sql, author.getId());
-    }
-
-    public List<Book> getByPublisher(Publisher publisher) {
-        return null;
-    }
-
-    public List<Book> getCustomList(Book book, User user, CustomListType type) {
-        return null;
-    }
-
-    public List<Book> getByGenres(List<Genre> genres) {
-        return null;
     }
 
     public List<Book> getByGenres(List<Genre> genres, int count, boolean isRandomOrder) {

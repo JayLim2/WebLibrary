@@ -6,26 +6,19 @@ drop table if exists  fav_genres;
 
 drop table if exists  genres;
 
-drop table if exists custom_list_element;
-
 drop table if exists books;
 
 drop table if exists authors;
 
 drop table if exists publishers;
 
-drop table if exists custom_list_types;
-
 drop table if exists users;
-
 
 drop sequence if exists author_id_seq;
 
 drop sequence if exists publisher_id_seq;
 
 drop sequence if exists book_id_seq;
-
-drop sequence if exists custom_list_type_id_seq;
 
 drop sequence if exists user_id_seq;
 
@@ -44,10 +37,6 @@ CREATE SEQUENCE IF NOT EXISTS publisher_id_seq
   INCREMENT 1;
 
 CREATE SEQUENCE IF NOT EXISTS book_id_seq
-  START 1
-  INCREMENT 1;
-
-CREATE SEQUENCE IF NOT EXISTS custom_list_type_id_seq
   START 1
   INCREMENT 1;
 
@@ -106,14 +95,6 @@ create table if not exists books
       on update restrict on delete restrict
 );
 
-create table if not exists custom_list_types
-(
-  custom_list_type_id int default nextval('custom_list_type_id_seq')
-    constraint custom_list_types_pk
-      primary key,
-  type_name           varchar(60) not null
-);
-
 create table if not exists "users"
 (
   user_id    int default nextval('user_id_seq')
@@ -122,7 +103,7 @@ create table if not exists "users"
   login      varchar(20) not null,
   password   varchar(32) not null,
   first_name varchar(60) not null,
-  last_name  varchar(60) not null,
+  last_name  varchar(60) not null
 );
 create unique index if not exists users_login_uindex
   on "users" (login);
@@ -182,22 +163,4 @@ create table fav_genres
       on update restrict on delete restrict,
   constraint fav_genres_pk
     primary key (user_id, genre_id)
-);
-
-create table if not exists custom_list_element
-(
-  type_id int
-    constraint type_id_fk
-      references custom_list_types (custom_list_type_id)
-      on update restrict on delete restrict,
-  user_id int
-    constraint user_id_fk
-      references users (user_id)
-      on update restrict on delete restrict,
-  book_id int
-    constraint book_id_fk
-      references books (book_id)
-      on update restrict on delete restrict,
-  constraint custom_list_element_pk
-    primary key (type_id, user_id, book_id)
 );

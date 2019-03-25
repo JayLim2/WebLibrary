@@ -28,7 +28,4 @@ public class DAOInstances {
         return UserDAO.getInstance();
     }
 
-    public static CustomListTypeDAO getCustomListTypeDAO() {
-        return CustomListTypeDAO.getInstance();
-    }
 }

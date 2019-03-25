@@ -1,6 +1,7 @@
+package utils;
+
 import dao.*;
 import models.*;
-import utils.HashUtil;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,19 +11,22 @@ import java.util.Random;
 
 import static utils.DAOInstances.*;
 
-public class WebLibraryApplication {
-    public static void main(String[] args) {
-        initialize();
-    }
+public class DatabaseInitializer {
 
-    public static void initialize() {
+    private static volatile Random random;
+    private static volatile boolean alreadyInitialized = false;
+
+    public synchronized static void initializeByTestData() {
+        if (alreadyInitialized) return;
+
+        random = new Random();
+
         AuthorDAO authorDAO = getAuthorDAO();
         PublisherDAO publisherDAO = getPublisherDAO();
         BookDAO bookDAO = getBookDAO();
         GenreDAO genreDAO = getGenreDAO();
         UserDAO userDAO = getUserDAO();
         BookRatingDAO bookRatingDAO = getBookRatingDAO();
-        CustomListTypeDAO customListTypeDAO = getCustomListTypeDAO();
 
         int authorsCount = 7;
         int publishersCount = 4;
@@ -30,7 +34,6 @@ public class WebLibraryApplication {
         int genresCount = 15;
         int usersCount = 4;
         int bookRatingsCount = 9;
-        int customListTypesCount = 3;
 
         //authors
         for (int i = 1; i <= authorsCount; i++) {
@@ -62,7 +65,7 @@ public class WebLibraryApplication {
         Base64.Encoder encoder = Base64.getEncoder();
         for (int i = 1; i <= usersCount; i++) {
             User user = new User();
-            String login = "user"+i;
+            String login = "user" + i;
             user.setLogin(login);
             String pass = new String(
                     encoder.encode(login.getBytes())
@@ -96,13 +99,6 @@ public class WebLibraryApplication {
             bookRatingDAO.save(rating);
         }
 
-        //list types
-        for (int i = 1; i <= customListTypesCount; i++) {
-            CustomListType type = new CustomListType();
-            type.setName("List Type " + i);
-            customListTypeDAO.save(type);
-        }
-
         //book genres
         for (int i = 1; i <= booksCount; i++) {
             int bookGenresCount = random.nextInt(genresCount);
@@ -131,13 +127,10 @@ public class WebLibraryApplication {
             }
         }
 
-        //custom lists
-        for (int i = 1; i <= 25; i++) {
+        alreadyInitialized = true;
 
-        }
+        System.out.println(alreadyInitialized);
     }
-
-    private static final Random random = new Random();
 
     private static LocalDate randomDate() {
         return LocalDate.of(

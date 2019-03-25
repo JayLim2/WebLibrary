@@ -8,14 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Войти в систему</title>
+    <title>Регистрация</title>
     <%@include file="/libs.jsp" %>
     <meta charset="UTF-8">
 </head>
 <body>
 <jsp:include page="/menu.jsp"/>
 <div class="container" style="margin-top: 40px;">
-    <h1>Войти в систему</h1>
+    <h1>Регистрация</h1>
     <%
         Object error = request.getAttribute("error");
         if (error != null) {
@@ -56,13 +56,37 @@
                     <input type="password" name="password" style="width:300px;" value="${password}"/>
                 </div>
             </div>
+            <div class="table-row">
+                <div class="table-cell">
+                    <b>Повторите пароль:</b>
+                </div>
+                <div class="table-cell">
+                    <input type="password" name="verifyPassword" style="width:300px;" value="${verifyPassword}"/>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">
+                    <b>Имя:</b>
+                </div>
+                <div class="table-cell">
+                    <input type="text" name="firstName" style="width:300px;" value="${firstName}"/>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="table-cell">
+                    <b>Фамилия:</b>
+                </div>
+                <div class="table-cell">
+                    <input type="text" name="lastName" style="width:300px;" value="${lastName}"/>
+                </div>
+            </div>
 
             <div class="table-row">
                 <div class="table-cell">
                 </div>
                 <div class="table-cell">
                     <br/>
-                    <input type="submit" class="btn btn-dark" value="Войти">
+                    <input type="submit" class="btn btn-dark" value="Зарегистрироваться">
                 </div>
             </div>
         </div>

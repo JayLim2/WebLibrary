@@ -122,7 +122,7 @@ create table if not exists "users"
   login      varchar(20) not null,
   password   varchar(32) not null,
   first_name varchar(60) not null,
-  last_name  varchar(60) not null
+  last_name  varchar(60) not null,
 );
 create unique index if not exists users_login_uindex
   on "users" (login);

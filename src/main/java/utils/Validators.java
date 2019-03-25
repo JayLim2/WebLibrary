@@ -1,14 +1,12 @@
 package utils;
 
-import models.Author;
-import models.Book;
-import models.Genre;
-import models.Publisher;
+import models.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static utils.ParameterHandler.tryParseInteger;
 
@@ -28,6 +26,13 @@ public class Validators {
     //publisher restrictions
     private static final int PUBLISHER_TITLE_MAX = 150;
 
+    //user restrictions
+    private static final int USER_LOGIN_MIN = 3;
+    private static final int USER_LOGIN_MAX = 20;
+    private static final int USER_PASSWORD_MIN = 6;
+    private static final int USER_PASSWORD_MAX = 20;
+    private static final int USER_FIRST_NAME_MAX = 60;
+    private static final int USER_LAST_NAME_MAX = 60;
 
     public static String validateAuthorData(Author author, String name,
                                             String birthDate, String deathDate,
@@ -163,6 +168,52 @@ public class Validators {
         if (message.isEmpty()) {
             publisher.setTitle(title);
             publisher.setAddress(address);
+        }
+
+        return message;
+    }
+
+    public static String validateUserData(User user, String login, String password, String verifyPassword, String firstName, String lastName) {
+        String message = "";
+
+        if (user == null) {
+            message = "Передан некорректный объект пользователя.";
+            return message;
+        }
+
+        if (login == null || login.isEmpty()) {
+            message = "Логин не должен быть пустым.";
+        } else if (login.length() < USER_LOGIN_MIN || login.length() > USER_LOGIN_MAX) {
+            message = "Логин должен быть длиной от "
+                    + USER_LOGIN_MIN
+                    + " до "
+                    + USER_LOGIN_MAX
+                    + " символов.";
+        } else if (password == null || password.isEmpty()) {
+            message = "Пароль не должен быть пустым.";
+        } else if (password.length() < USER_PASSWORD_MIN || password.length() > USER_PASSWORD_MAX) {
+            message = "Пароль должен быть длиной от "
+                    + USER_PASSWORD_MIN
+                    + " до "
+                    + USER_PASSWORD_MAX
+                    + " символов.";
+        } else if (!Objects.equals(password, verifyPassword)) {
+            message = "Пароли не совпадают.";
+        } else if (firstName == null || firstName.isEmpty()) {
+            message = "Имя не должно быть пустым.";
+        } else if (firstName.length() > USER_FIRST_NAME_MAX) {
+            message = "Имя не должно превышать " + USER_FIRST_NAME_MAX + " символов.";
+        } else if (lastName == null || lastName.isEmpty()) {
+            message = "Фамилия не должна быть пустой.";
+        } else if (lastName.length() > USER_LAST_NAME_MAX) {
+            message = "Фамилия не должна превышать " + USER_LAST_NAME_MAX + " символов.";
+        }
+
+        if (message.isEmpty()) {
+            user.setLogin(login);
+            user.setPassword(HashUtil.encodeFromBytes(password.getBytes()));
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
         }
 
         return message;

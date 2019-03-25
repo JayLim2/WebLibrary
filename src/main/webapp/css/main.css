@@ -83,3 +83,14 @@ textarea {
     height: 200px;
     margin-bottom: 10px;
 }
+
+a.register {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+a.register:hover {
+    color: #ffee94;
+    cursor: pointer;
+}

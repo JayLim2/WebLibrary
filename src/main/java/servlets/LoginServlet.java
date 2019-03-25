@@ -32,16 +32,20 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String login = Optional.ofNullable(request.getParameter("login")).orElse("");
         String password = Optional.ofNullable(request.getParameter("password")).orElse("");
-        password = HashUtil.encodeFromBytes(password.getBytes());
+        String passwordHash = HashUtil.encodeFromBytes(password.getBytes());
 
         try {
-            User user = DAOInstances.getUserDAO().getUserByCredentials(login, password);
+            User user = DAOInstances.getUserDAO().getUserByCredentials(login, passwordHash);
             if (user != null) {
                 request.getSession().setAttribute("user", user);
                 response.sendRedirect("/");
             }
         } catch (InvalidCredentialsException e) {
             sendMessage(request, MessageType.ERROR, e.getMessage());
+
+            request.setAttribute("login", login);
+            request.setAttribute("password", password);
+
             dispatch(request, response);
         } catch (Exception e) {
             e.printStackTrace();

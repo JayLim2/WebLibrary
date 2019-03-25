@@ -17,7 +17,13 @@
 <body>
 <jsp:include page="/menu.jsp"/>
 <div class="container" style="margin-top: 40px;">
-    <h1>Избранные жанры</h1>
+    <h1>
+        Избранные жанры
+
+        <a class="btn btn-dark" href="${pageContext.request.contextPath}/user/profile">
+            Вернуться в профиль
+        </a>
+    </h1>
     <%
         Object error = request.getAttribute("error");
         if (error != null) {

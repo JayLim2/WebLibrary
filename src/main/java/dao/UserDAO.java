@@ -48,7 +48,7 @@ public class UserDAO extends AbstractDAO<User, Integer> {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("INSERT INTO users(login, password) VALUES (?, ?)");
+                    connection.prepareStatement("INSERT INTO users(login, password, first_name, last_name) VALUES (?, ?, ?, ?)");
             mapEntityToStatement(entity, statement);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public class UserDAO extends AbstractDAO<User, Integer> {
         if (entity == null) return false;
         try (Connection connection = getConnection()) {
             PreparedStatement statement =
-                    connection.prepareStatement("UPDATE users SET login = ?, password = ? WHERE user_id = ?");
+                    connection.prepareStatement("UPDATE users SET login = ?, password = ?, first_name = ?, last_name = ? WHERE user_id = ?");
             mapEntityToStatement(entity, statement);
             statement.setInt(3, entity.getId());
             return statement.executeUpdate() > 0;
@@ -90,6 +90,8 @@ public class UserDAO extends AbstractDAO<User, Integer> {
     protected void mapEntityToStatement(User entity, PreparedStatement statement) throws SQLException {
         statement.setString(1, entity.getLogin());
         statement.setString(2, entity.getPassword());
+        statement.setString(3, entity.getFirstName());
+        statement.setString(4, entity.getLastName());
     }
 
     @Override
@@ -97,7 +99,9 @@ public class UserDAO extends AbstractDAO<User, Integer> {
         return new User(
                 set.getInt(1),
                 set.getString("login"),
-                set.getString("password")
+                set.getString("password"),
+                set.getString("first_name"),
+                set.getString("last_name")
         );
     }
 

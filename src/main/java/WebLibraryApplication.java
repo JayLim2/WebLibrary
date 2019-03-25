@@ -68,6 +68,8 @@ public class WebLibraryApplication {
                     encoder.encode(login.getBytes())
             );
             user.setPassword(pass);
+            user.setFirstName("Name " + i);
+            user.setLastName("Last Name " + i);
             userDAO.save(user);
         }
 

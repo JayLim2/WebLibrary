@@ -80,9 +80,17 @@
                     <%
                         LocalDate deathDate = ((Author) request.getAttribute("author")).getDeathDate();
                     %>
-                    <input type="text" name="deathDate" class="form-control" readonly style="width:300px;"
+
+                    <input type="text" name="deathDate" class="form-control" readonly style="width:300px;float:left"
                            value="<% if(deathDate != null) out.println(formatter.format(deathDate)); %>"
                            id="deathDate"/>
+
+                    <input type="button"
+                           class="btn btn-dark"
+                           style="float:left;margin-left:10px"
+                           value="Очистить"
+                           onclick="$('#deathDate').val('')"
+                    />
                 </div>
             </div>
             <div class="table-row">

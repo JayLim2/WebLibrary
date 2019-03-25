@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: JayLim
@@ -16,29 +17,18 @@
 <jsp:include page="/menu.jsp"/>
 <div class="container" style="margin-top: 40px;">
     <h1>Мой профиль</h1>
-    <%
-        Object error = request.getAttribute("error");
-        if (error != null) {
-    %>
-    <div class="message-box error">
-        <% out.println(error); %>
-    </div>
-    <%
-        }
-    %>
 
-    <%
-        Object info = request.getAttribute("info");
-        if (info != null) {
-    %>
-    <div class="message-box info">
-        <% out.println(info); %>
-    </div>
-    <%
-        }
-    %>
+    <b>Ник пользователя в системе: </b> <c:out value="${login}"/>
+    <br/>
+    <b>Имя: </b> <c:out value="${firstName}"/>
+    <br/>
+    <b>Фамилия: </b> <c:out value="${lastName}"/>
 
-    -
+    <div style="margin-top: 20px">
+        <a class="btn btn-dark" href="${pageContext.request.contextPath}/user/favoriteGenres">Мои любимые жанры</a>
+        <a class="btn btn-dark" href="${pageContext.request.contextPath}/user/recommendations">Мои рекомендации</a>
+        <a class="btn btn-danger" href="${pageContext.request.contextPath}/logout">Выйти</a>
+    </div>
 </div>
 </body>
 </html>

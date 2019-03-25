@@ -30,6 +30,8 @@ public class AddAuthorServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
         try {
             ServletFileUpload upload = getServletFileUpload();
             List<FileItem> formItems = upload.parseRequest(request);

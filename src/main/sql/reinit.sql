@@ -116,11 +116,13 @@ create table if not exists custom_list_types
 
 create table if not exists "users"
 (
-  user_id  int default nextval('user_id_seq')
+  user_id    int default nextval('user_id_seq')
     constraint users_pk
       primary key,
-  login    varchar(20) not null,
-  password varchar(32) not null
+  login      varchar(20) not null,
+  password   varchar(32) not null,
+  first_name varchar(60) not null,
+  last_name  varchar(60) not null
 );
 create unique index if not exists users_login_uindex
   on "users" (login);

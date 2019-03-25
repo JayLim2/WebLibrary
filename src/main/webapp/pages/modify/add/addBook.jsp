@@ -140,7 +140,10 @@
                 </div>
                 <div class="table-cell">
                     <input type="file" id="poster" name="poster"/>
-                    <input type="hidden" id="poster-hash" value="">
+
+                    <div style="margin-top:10px;font-size:10pt;font-style:italic;">
+                        Если вы оставите это поле пустым, будет загружен постер по умолчанию.
+                    </div>
                 </div>
             </div>
 

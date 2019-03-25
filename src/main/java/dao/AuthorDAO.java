@@ -88,8 +88,10 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
     //Вспомогательные методы маппинга рукотворного
     protected void mapEntityToStatement(Author entity, PreparedStatement statement) throws SQLException {
         statement.setString(1, entity.getName());
-        statement.setDate(2, Date.valueOf(entity.getBirthDate()));
-        statement.setDate(3, Date.valueOf(entity.getDeathDate()));
+        Date birthDate = entity.getBirthDate() != null ? Date.valueOf(entity.getBirthDate()) : null;
+        Date deathDate = entity.getDeathDate() != null ? Date.valueOf(entity.getDeathDate()) : null;
+        statement.setDate(2, birthDate);
+        statement.setDate(3, deathDate);
         statement.setString(4, entity.getImageHash());
         statement.setString(5, entity.getDescription());
     }
@@ -99,8 +101,8 @@ public class AuthorDAO extends AbstractDAO<Author, Integer> {
             Author author = new Author();
             author.setId(set.getInt(1));
             author.setName(set.getString("name"));
-            LocalDate birthDate = set.getDate("birth_date").toLocalDate();
-            LocalDate deathDate = set.getDate("death_date").toLocalDate();
+            LocalDate birthDate = set.getDate("birth_date") != null ? set.getDate("birth_date").toLocalDate() : null;
+            LocalDate deathDate = set.getDate("death_date") != null ? set.getDate("death_date").toLocalDate() : null;
             author.setBirthDate(birthDate);
             author.setDeathDate(deathDate);
             author.setImageHash(set.getString("image_hash"));

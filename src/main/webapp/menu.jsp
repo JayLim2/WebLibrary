@@ -17,6 +17,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/publishers">Издатели</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/genres">Жанры</a>
+            </li>
         </ul>
         <div class="dropdown">
             <%

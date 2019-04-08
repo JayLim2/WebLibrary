@@ -26,6 +26,9 @@ public class Validators {
     //publisher restrictions
     private static final int PUBLISHER_TITLE_MAX = 150;
 
+    //genre restrictions
+    private static final int GENRE_TITLE_MAX = 150;
+
     //user restrictions
     private static final int USER_LOGIN_MIN = 3;
     private static final int USER_LOGIN_MAX = 20;
@@ -168,6 +171,27 @@ public class Validators {
         if (message.isEmpty()) {
             publisher.setTitle(title);
             publisher.setAddress(address);
+        }
+
+        return message;
+    }
+
+    public static String validateGenreData(Genre genre, String title) {
+        String message = "";
+
+        if (genre == null) {
+            message = "Передан некорректный объект жанра.";
+            return message;
+        }
+
+        if (title == null || title.isEmpty()) {
+            message = "Название жанра не может быть пустым.";
+        } else if (title.length() > GENRE_TITLE_MAX) {
+            message = "Название жанра не должно быть больше " + GENRE_TITLE_MAX + " символов.";
+        }
+
+        if (message.isEmpty()) {
+            genre.setName(title);
         }
 
         return message;

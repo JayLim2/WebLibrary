@@ -25,7 +25,7 @@
     <b>Фамилия: </b> <c:out value="${lastName}"/>
 
     <div style="margin-top: 20px">
-        <a class="btn btn-dark" href="${pageContext.request.contextPath}/user/favoriteGenres">Мои любимые жанры</a>
+        <a class="btn btn-dark" href="${pageContext.request.contextPath}/user/favoriteGenres">Мои избранные жанры</a>
         <a class="btn btn-dark" href="${pageContext.request.contextPath}/user/recommendations">Мои рекомендации</a>
         <a class="btn btn-danger" href="${pageContext.request.contextPath}/logout">Выйти</a>
     </div>

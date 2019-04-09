@@ -107,6 +107,10 @@
                 </div>
                 <div class="table-cell">
                     <input type="file" id="poster" name="poster"/>
+
+                    <div style="margin-top:10px;font-size:10pt;font-style:italic;">
+                        Оставьте это поле пустым, если не хотите менять постер.
+                    </div>
                 </div>
             </div>
 

@@ -1,11 +1,10 @@
 package servlets;
 
-import models.Book;
-import models.Genre;
-import models.MessageType;
+import models.*;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import utils.DAOInstances;
+import utils.ParameterHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,18 +26,19 @@ public class AddBookServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        dispatchAddBook(request, response);
+        dispatchAddBook(request, response, null, null);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
+        Map<String, String> fields = null;
+        List<Genre> genres = null;
         try {
             ServletFileUpload upload = getServletFileUpload();
-            List<Genre> genres = new ArrayList<>();
             List<FileItem> formItems = upload.parseRequest(request);
-            Map<String, String> fields = getBookParams(formItems, genres);
+            genres = new ArrayList<>();
+            fields = getBookParams(formItems, genres);
             if (fields != null && !fields.isEmpty()) {
                 Book book = new Book();
                 String validatingMessage = validateBookData(
@@ -54,12 +54,10 @@ public class AddBookServlet extends HttpServlet {
                 );
                 if (!validatingMessage.isEmpty()) {
                     sendMessage(request, MessageType.ERROR, validatingMessage);
+                } else if (DAOInstances.getBookDAO().saveWithGenres(book, genres)) {
+                    sendMessage(request, MessageType.INFORMATION, "Книга добавлена.");
                 } else {
-                    if (DAOInstances.getBookDAO().saveWithGenres(book, genres)) {
-                        sendMessage(request, MessageType.INFORMATION, "Книга добавлена.");
-                    } else {
-                        sendMessage(request, MessageType.ERROR, "Ошибка при добавлении книги.");
-                    }
+                    sendMessage(request, MessageType.ERROR, "Произошла ошибка при добавлении книги.");
                 }
             } else {
                 sendMessage(request, MessageType.ERROR, "Параметры не переданы.");
@@ -69,10 +67,22 @@ public class AddBookServlet extends HttpServlet {
             sendMessage(request, MessageType.ERROR, "При обработке запроса произошла ошибка: " + ex.getMessage());
         }
 
-        dispatchAddBook(request, response);
+        dispatchAddBook(request, response, fields, genres);
     }
 
-    private void dispatchAddBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void dispatchAddBook(HttpServletRequest request, HttpServletResponse response,
+                                 Map<String, String> fields,
+                                 List<Genre> genres) throws ServletException, IOException {
+        if (fields != null && genres != null) {
+            request.setAttribute("title", fields.get("title"));
+            request.setAttribute("createdYear", fields.get("createdYear"));
+            request.setAttribute("publishedYear", fields.get("publishedYear"));
+            request.setAttribute("authorId", fields.get("authorId"));
+            request.setAttribute("publisherId", fields.get("publisherId"));
+            request.setAttribute("description", fields.get("description"));
+            request.setAttribute("selectedGenres", genres);
+        }
+
         request.getRequestDispatcher("/pages/modify/add/addBook.jsp")
                 .forward(request, response);
     }

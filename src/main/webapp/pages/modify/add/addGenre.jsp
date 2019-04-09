@@ -45,7 +45,7 @@
                     <b>Название жанра:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="title" style="width:300px;" value="test жанра"/>
+                    <input type="text" name="title" style="width:300px;" value="${genreTitle}"/>
                 </div>
             </div>
 

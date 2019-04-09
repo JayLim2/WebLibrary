@@ -25,17 +25,17 @@ public class AddAuthorServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        dispatchAddAuthor(request, response);
+        dispatchAddAuthor(request, response, null);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
+        Map<String, String> fields = null;
         try {
             ServletFileUpload upload = getServletFileUpload();
             List<FileItem> formItems = upload.parseRequest(request);
-            Map<String, String> fields = getAuthorParams(formItems);
+            fields = getAuthorParams(formItems);
             if (fields != null && !fields.isEmpty()) {
                 Author author = new Author();
                 String validatingMessage = validateAuthorData(
@@ -48,9 +48,10 @@ public class AddAuthorServlet extends HttpServlet {
                 );
                 if (!validatingMessage.isEmpty()) {
                     sendMessage(request, MessageType.ERROR, validatingMessage);
-                } else {
-                    DAOInstances.getAuthorDAO().save(author);
+                } else if (DAOInstances.getAuthorDAO().save(author)) {
                     sendMessage(request, MessageType.INFORMATION, "Автор добавлен.");
+                } else {
+                    sendMessage(request, MessageType.ERROR, "Произошла ошибка добавления автора. Возможно, такой автор уже существует в системе.");
                 }
             } else {
                 sendMessage(request, MessageType.ERROR, "Параметры не переданы.");
@@ -60,10 +61,18 @@ public class AddAuthorServlet extends HttpServlet {
             sendMessage(request, MessageType.ERROR, "При обработке запроса произошла ошибка: " + ex.getMessage());
         }
 
-        dispatchAddAuthor(request, response);
+        dispatchAddAuthor(request, response, fields);
     }
 
-    private void dispatchAddAuthor(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void dispatchAddAuthor(HttpServletRequest request, HttpServletResponse response,
+                                   Map<String, String> fields) throws ServletException, IOException {
+        if (fields != null) {
+            request.setAttribute("authorName", fields.get("authorName"));
+            request.setAttribute("birthDate", fields.get("birthDate"));
+            request.setAttribute("deathDate", fields.get("deathDate"));
+            request.setAttribute("description", fields.get("description"));
+        }
+
         request.getRequestDispatcher("/pages/modify/add/addAuthor.jsp")
                 .forward(request, response);
     }

@@ -3,6 +3,10 @@
 <%@ page import="models.Publisher" %>
 <%@ page import="utils.DAOInstances" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Objects" %>
+<%@ page import="utils.ParameterHandler" %>
+<%@ page import="java.util.Optional" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -51,7 +55,7 @@
                     <b>Название книги:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="title" style="width:300px;" value="test книга"/>
+                    <input type="text" name="title" style="width:300px;" value="${title}"/>
                 </div>
             </div>
             <div class="table-row">
@@ -59,7 +63,7 @@
                     <b>Год написания:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="createdYear" style="width:300px;"/>
+                    <input type="text" name="createdYear" style="width:300px;" value="${createdYear}"/>
                 </div>
             </div>
             <div class="table-row">
@@ -67,7 +71,7 @@
                     <b>Год публикации:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="publishedYear" style="width:300px;"/>
+                    <input type="text" name="publishedYear" style="width:300px;" value="${publishedYear}"/>
                 </div>
             </div>
 
@@ -79,9 +83,13 @@
                     <select name="authorId" style="width:200px">
                         <%
                             List<Author> authors = DAOInstances.getAuthorDAO().getAll();
+                            Object selectedAuthorIdAttribute = request.getAttribute("authorId");
+                            int selectedAuthorId = selectedAuthorIdAttribute != null ? ParameterHandler.tryParseInteger(selectedAuthorIdAttribute.toString()) : -1;
                             for (Author author : authors) {
+                                boolean selected = Objects.equals(selectedAuthorId, author.getId());
                         %>
-                        <option value="<%= author.getId() %>"><%= author.getName() %>
+                        <option value="<%= author.getId() %>"
+                                <% if(selected) { %>selected<% } %>><%= author.getName() %>
                         </option>
                         <%
                             }
@@ -97,9 +105,13 @@
                     <select name="publisherId" style="width:200px">
                         <%
                             List<Publisher> publishers = DAOInstances.getPublisherDAO().getAll();
+                            Object selectedPublisherIdAttribute = request.getAttribute("publisherId");
+                            int selectedPublisherId = selectedPublisherIdAttribute != null ? ParameterHandler.tryParseInteger(selectedPublisherIdAttribute.toString()) : -1;
                             for (Publisher publisher : publishers) {
+                                boolean selected = Objects.equals(selectedPublisherId, publisher.getId());
                         %>
-                        <option value="<%= publisher.getId() %>"><%= publisher.getTitle() %>
+                        <option value="<%= publisher.getId() %>"
+                                <% if(selected) { %>selected<% } %>><%= publisher.getTitle() %>
                         </option>
                         <%
                             }
@@ -115,9 +127,13 @@
                     <select name="genresList" multiple style="width:200px">
                         <%
                             List<Genre> genres = DAOInstances.getGenreDAO().getAll();
+                            Object selectedGenresAttribute = request.getAttribute("selectedGenres");
+                            List<Genre> selectedGenres = selectedGenresAttribute != null ? (List<Genre>) selectedGenresAttribute : new ArrayList<Genre>();
+
                             for (Genre genre : genres) {
+                                boolean selected = selectedGenres.contains(genre);
                         %>
-                        <option value="<%= genre.getId() %>"><%= genre.getName() %>
+                        <option value="<%= genre.getId() %>" <% if(selected) { %>selected<% } %>><%= genre.getName() %>
                         </option>
                         <%
                             }
@@ -131,7 +147,7 @@
                     <b>Описание книги:</b>
                 </div>
                 <div class="table-cell">
-                    <textarea name="description">some description</textarea>
+                    <textarea name="description">${description}</textarea>
                 </div>
             </div>
             <div class="table-row">

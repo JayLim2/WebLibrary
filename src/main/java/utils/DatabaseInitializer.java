@@ -17,7 +17,7 @@ public class DatabaseInitializer {
     private static volatile boolean alreadyInitialized = false;
 
     public synchronized static void initializeByTestData() {
-        if (alreadyInitialized) return;
+        if (true) return;
 
         random = new Random();
 

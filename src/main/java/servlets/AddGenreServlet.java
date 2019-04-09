@@ -31,15 +31,21 @@ public class AddGenreServlet extends HttpServlet {
         String validatingMessage = validateGenreData(genre, title);
         if (!validatingMessage.isEmpty()) {
             sendMessage(request, MessageType.ERROR, validatingMessage);
-        } else {
-            DAOInstances.getGenreDAO().save(genre);
+        } else if (DAOInstances.getGenreDAO().save(genre)) {
             sendMessage(request, MessageType.INFORMATION, "Жанр добавлен.");
+        } else {
+            sendMessage(request, MessageType.ERROR, "Произошла ошибка добавления. Возможно, жанр с таким названием уже существует в системе.");
         }
 
         dispatchAddPublisher(request, response);
     }
 
     private void dispatchAddPublisher(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String genreTitle = request.getParameter("title");
+        if (genreTitle != null) {
+            request.setAttribute("genreTitle", genreTitle);
+        }
+
         request.getRequestDispatcher("/pages/modify/add/addGenre.jsp")
                 .forward(request, response);
     }

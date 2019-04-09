@@ -32,15 +32,23 @@ public class AddPublisherServlet extends HttpServlet {
         String validatingMessage = validatePublisherData(publisher, title, address);
         if (!validatingMessage.isEmpty()) {
             sendMessage(request, MessageType.ERROR, validatingMessage);
-        } else {
-            DAOInstances.getPublisherDAO().save(publisher);
+        } else if (DAOInstances.getPublisherDAO().save(publisher)) {
             sendMessage(request, MessageType.INFORMATION, "Издатель добавлен.");
+        } else {
+            sendMessage(request, MessageType.ERROR, "Произошла ошибка добавления. Возможно, такой издатель уже существует в системе.");
         }
 
         dispatchAddPublisher(request, response);
     }
 
     private void dispatchAddPublisher(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String publisherTitle = request.getParameter("title");
+        String publisherAddress = request.getParameter("address");
+        if (publisherTitle != null) {
+            request.setAttribute("publisherTitle", publisherTitle);
+            request.setAttribute("publisherAddress", publisherAddress);
+        }
+
         request.getRequestDispatcher("/pages/modify/add/addPublisher.jsp")
                 .forward(request, response);
     }

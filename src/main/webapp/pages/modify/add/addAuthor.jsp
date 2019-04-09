@@ -46,7 +46,7 @@
                     <b>Имя автора:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="authorName" style="width:300px;" value="test автор"/>
+                    <input type="text" name="authorName" style="width:300px;" value="${authorName}"/>
                 </div>
             </div>
             <div class="table-row">
@@ -54,8 +54,10 @@
                     <b>Дата рождения:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="birthDate" class="form-control" readonly style="width:300px;"
-                           id="birthDate"/>
+                    <input type="text" name="birthDate" class="form-control" style="width:300px;"
+                           id="birthDate"
+                           value="${birthDate}"
+                    />
                 </div>
             </div>
             <div class="table-row">
@@ -63,8 +65,10 @@
                     <b>Дата смерти:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="deathDate" class="form-control" readonly style="width:300px;"
-                           id="deathDate"/>
+                    <input type="text" name="deathDate" class="form-control" style="width:300px;"
+                           id="deathDate"
+                           value="${deathDate}"
+                    />
                 </div>
             </div>
             <div class="table-row">
@@ -72,7 +76,7 @@
                     <b>Об авторе:</b>
                 </div>
                 <div class="table-cell">
-                    <textarea name="description">some description</textarea>
+                    <textarea name="description">${description}</textarea>
                 </div>
             </div>
             <div class="table-row">

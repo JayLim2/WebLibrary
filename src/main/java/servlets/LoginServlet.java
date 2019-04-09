@@ -30,6 +30,8 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
         String login = Optional.ofNullable(request.getParameter("login")).orElse("");
         String password = Optional.ofNullable(request.getParameter("password")).orElse("");
         String passwordHash = HashUtil.encodeFromBytes(password.getBytes());

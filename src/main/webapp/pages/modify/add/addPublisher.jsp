@@ -45,7 +45,7 @@
                     <b>Название издателя:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="title" style="width:300px;" value="test издатель"/>
+                    <input type="text" name="title" style="width:300px;" value="${publisherTitle}"/>
                 </div>
             </div>
             <div class="table-row">
@@ -53,7 +53,7 @@
                     <b>Адрес:</b>
                 </div>
                 <div class="table-cell">
-                    <input type="text" name="address" style="width:300px;"/>
+                    <input type="text" name="address" style="width:300px;" value="${publisherAddress}"/>
                 </div>
             </div>
 

@@ -74,6 +74,8 @@ create table if not exists publishers
   title        varchar(150) not null,
   address      varchar(300)
 );
+create unique index if not exists publishers_title_uindex
+  on "publishers" (title);
 
 create table if not exists books
 (
@@ -141,11 +143,11 @@ create table if not exists book_genres
   book_id  int
     constraint book_id_fk
       references books (book_id)
-      on update restrict on delete restrict,
+      on update cascade on delete cascade,
   genre_id int
     constraint genre_id_fk
       references genres (genre_id)
-      on update restrict on delete restrict,
+      on update cascade on delete cascade,
   constraint book_genres_pk
     primary key (book_id, genre_id)
 );
